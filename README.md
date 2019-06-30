@@ -19,4 +19,4 @@ Important notes:
 - You can minimize InterGUI.exe to your system tray and it will still work.  You can also schedule the program to start automatically in Windows and add "-m" to the command line parameters to force it to start minimized.
 - There is a hidden setting called "FancyOutput" in settings.txt that when set to "1" can show the live sensitivity/acceleration output if you run interaccel.exe directly instead of using the GUI.  But it cases a small amount of input lag, so any time the GUI takes over it forces FancyOutput to 0.
 
-- povohat & KovaaK
+-povohat & KovaaK
