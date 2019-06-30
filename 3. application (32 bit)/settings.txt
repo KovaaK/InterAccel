@@ -1,0 +1,13 @@
+Sensitivity = 1
+Acceleration = 0
+SensitivityCap = 0
+Offset = 0
+Power = 2
+Pre-ScaleX = 1
+Pre-ScaleY = 1
+Post-ScaleX = 1
+Post-ScaleY = 1
+AngleAdjustment = 0
+AngleSnapping = 0
+SpeedCap = 0
+FancyOutput = 0
