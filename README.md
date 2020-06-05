@@ -12,6 +12,8 @@ https://www.microsoft.com/en-us/download/details.aspx?id=48145 if you don't have
 
 Then after you've rebooted, you should be able to run it.  Go to one of the "application" folders and run interGUI.exe.  The program will run a configuration wizard to give you a starting point for mouse acceleration, but you are welcome to use whatever settings you prefer.
 
+For the most comprehensive and up-to-date guide on this driver, see [N.R.K's GDoc](https://docs.google.com/document/d/1wuQln99lQVBU9L8_QbpifrarpJ1xjPuKsKD2FY026Hc/edit#)
+
 Important notes:
 - Interaccel.exe is the program that actually performs live mouse acceleration, and it only reads the configuration values when it is first run.
 - InterGUI.exe runs Interaccel.exe in the background and automatically closes/restarts it when you change configuration values.
