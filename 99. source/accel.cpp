@@ -247,7 +247,7 @@ int main()
 						coord.X = 40;
 						coord.Y = 14;
 						SetConsoleCursorPosition(hConsole, coord);
-						if (angle - newangle != 0) {
+						if (angle - newangle != 0.0) {
 							SetConsoleTextAttribute(hConsole, 0x2f);
 							printf("Snapped");
 						}
@@ -360,11 +360,11 @@ int main()
 					coord.X = 40;
 					coord.Y = 7;
 					SetConsoleCursorPosition(hConsole, coord);
-					if (accelSens > 1) {
+					if (accelSens > 1.0) {
 						SetConsoleTextAttribute(hConsole, 0x2f);
 						printf("Accel +");
 					}
-					else if (accelSens < 1) {
+					else if (accelSens < 1.0) {
 						SetConsoleTextAttribute(hConsole, 0x4f);
 						printf("Accel -");
 					}
