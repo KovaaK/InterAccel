@@ -1,5 +1,4 @@
 #include "interception.h"
-#include "utils.h"
 #include <windows.h>
 #define _USE_MATH_DEFINES
 #include <cmath>
@@ -11,7 +10,7 @@ int main()
 	InterceptionDevice device;
 	InterceptionStroke stroke;
 
-	raise_process_priority();
+	SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
 
 	context = interception_create_context();
 
