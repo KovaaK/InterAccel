@@ -45,7 +45,7 @@ int main()
 		newangle,
 		variableValue;
 
-	bool debugOutput = 0, garbageFile = 0;
+	bool debugOutput = false, garbageFile = false;
 	char variableName[24];
 	COORD coord;
 
@@ -148,13 +148,13 @@ int main()
 			else if (strcmp(variableName, "FancyOutput") == 0)
 			{
 				if (variableValue != 0) {
-					debugOutput = 1;
+					debugOutput = true;
 				}
 				
 			}
 			else
 			{
-				garbageFile = 1;
+				garbageFile = true;
 			}
 		}
 
