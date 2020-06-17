@@ -1,6 +1,7 @@
 #include "interception.h"
 #include "utils.h"
 #include <windows.h>
+#define _USE_MATH_DEFINES
 #include <math.h>
 #include <iostream>
 
@@ -39,7 +40,6 @@ int main()
 		var_angle = 0.0,
 		var_angleSnap = 0.0,
 		var_speedCap = 0.0,
-		pi = 3.141592653589793238462643383279502884197169399375105820974944592307816406,
 		hypot,
 		angle,
 		newangle,
@@ -213,7 +213,7 @@ int main()
 					hypot = sqrt(dx*dx + dy*dy); // convert to polar
 					angle = atan2(dy, dx);
 
-					angle += (var_angle * pi / 180); // apply adjustment in radians
+					angle += (var_angle * M_PI / 180); // apply adjustment in radians
 
 					dx = hypot * cos(angle); // convert back to cartesian
 					dy = hypot * sin(angle);
@@ -225,18 +225,18 @@ int main()
 					newangle = angle = atan2(dy, dx);
 
 
-					if (fabs(cos(angle)) < (var_angleSnap*pi / 180)) {	// test for vertical
+					if (fabs(cos(angle)) < (var_angleSnap*M_PI / 180)) {	// test for vertical
 						if (sin(angle) > 0) {
-							newangle = pi / 2;
+							newangle = M_PI / 2;
 						}
 						else {
-							newangle = 3 * pi / 2;
+							newangle = 3 * M_PI / 2;
 						}
 					}
 					else
-						if (fabs(sin(angle)) < (var_angleSnap*pi / 180)) {	// test for horizontal
+						if (fabs(sin(angle)) < (var_angleSnap*M_PI / 180)) {	// test for horizontal
 							if (cos(angle) < 0) {
-								newangle = pi;
+								newangle = M_PI;
 							}
 							else {
 								newangle = 0;
