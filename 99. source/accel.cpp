@@ -201,8 +201,8 @@ int main()
 				// figure out frametime
 				QueryPerformanceCounter(&frameTime);
 				frameTime_ms = (double) (frameTime.QuadPart - oldFrameTime.QuadPart) * 1000.0 / PCfreq.QuadPart;
-				if (frameTime_ms > 200)
-					frameTime_ms = 200;
+				if (frameTime_ms > 200.0)
+					frameTime_ms = 200.0;
 
 				// retrieve new mouse data
 				dx = (double) mstroke.x;
@@ -213,7 +213,7 @@ int main()
 					hypot = sqrt(dx*dx + dy*dy); // convert to polar
 					angle = atan2(dy, dx);
 
-					angle += (var_angle * M_PI / 180); // apply adjustment in radians
+					angle += (var_angle * M_PI / 180.0); // apply adjustment in radians
 
 					dx = hypot * cos(angle); // convert back to cartesian
 					dy = hypot * sin(angle);
@@ -225,21 +225,21 @@ int main()
 					newangle = angle = atan2(dy, dx);
 
 
-					if (fabs(cos(angle)) < (var_angleSnap*M_PI / 180)) {	// test for vertical
-						if (sin(angle) > 0) {
-							newangle = M_PI / 2;
+					if (fabs(cos(angle)) < (var_angleSnap*M_PI / 180.0)) {	// test for vertical
+						if (sin(angle) > 0.0) {
+							newangle = M_PI / 2.0;
 						}
 						else {
-							newangle = 3 * M_PI / 2;
+							newangle = 3.0 * M_PI / 2.0;
 						}
 					}
 					else
-						if (fabs(sin(angle)) < (var_angleSnap*M_PI / 180)) {	// test for horizontal
-							if (cos(angle) < 0) {
+						if (fabs(sin(angle)) < (var_angleSnap*M_PI / 180.0)) {	// test for horizontal
+							if (cos(angle) < 0.0) {
 								newangle = M_PI;
 							}
 							else {
-								newangle = 0;
+								newangle = 0.0;
 							}
 						}
 
@@ -297,14 +297,14 @@ int main()
 
 				// apply accel
 				accelSens = var_sens;							// start with in-game sens so accel calc scales the same
-				if (var_accel > 0) {
+				if (var_accel > 0.0) {
 					rate = sqrt(dx*dx + dy*dy) / frameTime_ms;	// calculate velocity of mouse based on deltas
 					rate -= var_offset;							// offset affects the rate that accel sees
-					if (rate > 0) {
+					if (rate > 0.0) {
 						rate *= var_accel;
-						power = var_power - 1;
-						if (power < 0) {
-							power = 0;							// clamp power at lower bound of 0
+						power = var_power - 1.0;
+						if (power < 0.0) {
+							power = 0.0;							// clamp power at lower bound of 0
 						}
 						accelSens += pow(rate, power);
 					}
@@ -315,7 +315,7 @@ int main()
 						SetConsoleCursorPosition(hConsole, coord);
 					}
 
-					if (var_senscap > 0 && accelSens >= var_senscap) {
+					if (var_senscap > 0.0 && accelSens >= var_senscap) {
 						accelSens = var_senscap;				// clamp post-accel sensitivity at senscap
 						if (debugOutput) {
 							SetConsoleTextAttribute(hConsole, 0x2f);
