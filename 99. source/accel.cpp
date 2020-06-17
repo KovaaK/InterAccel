@@ -306,7 +306,7 @@ int main()
 						if (power < 0) {
 							power = 0;							// clamp power at lower bound of 0
 						}
-						accelSens += exp(power * log(rate));		// acceptable substitute for the missing pow() function
+						accelSens += pow(rate, power);
 					}
 
 					if (debugOutput) {
