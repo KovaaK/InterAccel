@@ -40,7 +40,6 @@ int main()
 		var_angle = 0.0,
 		var_angleSnap = 0.0,
 		var_speedCap = 0.0,
-		hypot,
 		angle,
 		newangle,
 		variableValue;
@@ -210,18 +209,16 @@ int main()
 
 				// angle correction
 				if (var_angle) {
-					hypot = sqrt(dx*dx + dy*dy); // convert to polar
 					angle = atan2(dy, dx);
 
 					angle += (var_angle * M_PI / 180.0); // apply adjustment in radians
 
-					dx = hypot * cos(angle); // convert back to cartesian
-					dy = hypot * sin(angle);
+					dx = hypot(dx, dy) * cos(angle); // convert back to cartesian
+					dy = hypot(dx, dy) * sin(angle);
 				}
 
 				// angle snapping
 				if (var_angleSnap) {
-					hypot = sqrt(dx*dx + dy*dy); // convert to polar
 					newangle = angle = atan2(dy, dx);
 
 
@@ -243,8 +240,8 @@ int main()
 							}
 						}
 
-					dx = hypot * cos(newangle); // convert back to cartesian
-					dy = hypot * sin(newangle);
+					dx = hypot(dx, dy) * cos(newangle); // convert back to cartesian
+					dy = hypot(dx, dy) * sin(newangle);
 
 					if (debugOutput) {
 
@@ -271,7 +268,7 @@ int main()
 
 				// apply speedcap
 				if (var_speedCap) {
-					rate = sqrt(dx*dx + dy*dy);
+					rate = hypot(dx, dy);
 
 					if (debugOutput) {
 						coord.X = 40;
@@ -298,7 +295,7 @@ int main()
 				// apply accel
 				accelSens = var_sens;							// start with in-game sens so accel calc scales the same
 				if (var_accel > 0.0) {
-					rate = sqrt(dx*dx + dy*dy) / frameTime_ms;	// calculate velocity of mouse based on deltas
+					rate = hypot(dx, dy) / frameTime_ms;	// calculate velocity of mouse based on deltas
 					rate -= var_offset;							// offset affects the rate that accel sees
 					if (rate > 0.0) {
 						rate *= var_accel;
