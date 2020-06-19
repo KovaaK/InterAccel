@@ -19,26 +19,26 @@ int main()
 
 
 	double
-		frameTime_ms = 0,
+		frameTime_ms = 0.0,
 		dx,
 		dy,
 		accelSens,
 		rate,
 		power,
-		carryX = 0,
-		carryY = 0,
-		var_sens = 1,
-		var_accel = 0,
-		var_senscap = 0,
-		var_offset = 0,
-		var_power = 2,
-		var_preScaleX = 1,
-		var_preScaleY = 1,
-		var_postScaleX = 1,
-		var_postScaleY = 1,
-		var_angle = 0,
-		var_angleSnap = 0,
-		var_speedCap = 0,
+		carryX = 0.0,
+		carryY = 0.0,
+		var_sens = 1.0,
+		var_accel = 0.0,
+		var_senscap = 0.0,
+		var_offset = 0.0,
+		var_power = 2.0,
+		var_preScaleX = 1.0,
+		var_preScaleY = 1.0,
+		var_postScaleX = 1.0,
+		var_postScaleY = 1.0,
+		var_angle = 0.0,
+		var_angleSnap = 0.0,
+		var_speedCap = 0.0,
 		angle,
 		newangle,
 		variableValue;
@@ -199,8 +199,8 @@ int main()
 				// figure out frametime
 				QueryPerformanceCounter(&frameTime);
 				frameTime_ms = (double) (frameTime.QuadPart - oldFrameTime.QuadPart) * 1000.0 / PCfreq.QuadPart;
-				if (frameTime_ms > 200)
-					frameTime_ms = 200;
+				if (frameTime_ms > 200.0)
+					frameTime_ms = 200.0;
 
 				// retrieve new mouse data
 				dx = (double) mstroke.x;
@@ -210,7 +210,7 @@ int main()
 				if (var_angle) {
 					angle = atan2(dy, dx);
 
-					angle += (var_angle * M_PI / 180); // apply adjustment in radians
+					angle += (var_angle * M_PI / 180.0); // apply adjustment in radians
 
 					dx = hypot(dx, dy) * cos(angle); // convert back to cartesian
 					dy = hypot(dx, dy) * sin(angle);
@@ -221,21 +221,21 @@ int main()
 					newangle = angle = atan2(dy, dx);
 
 
-					if (fabs(cos(angle)) < (var_angleSnap*M_PI / 180)) {	// test for vertical
-						if (sin(angle) > 0) {
-							newangle = M_PI / 2;
+					if (fabs(cos(angle)) < (var_angleSnap*M_PI / 180.0)) {	// test for vertical
+						if (sin(angle) > 0.0) {
+							newangle = M_PI / 2.0;
 						}
 						else {
-							newangle = 3 * M_PI / 2;
+							newangle = 3.0 * M_PI / 2.0;
 						}
 					}
 					else
-						if (fabs(sin(angle)) < (var_angleSnap*M_PI / 180)) {	// test for horizontal
-							if (cos(angle) < 0) {
+						if (fabs(sin(angle)) < (var_angleSnap*M_PI / 180.0)) {	// test for horizontal
+							if (cos(angle) < 0.0) {
 								newangle = M_PI;
 							}
 							else {
-								newangle = 0;
+								newangle = 0.0;
 							}
 						}
 
@@ -247,7 +247,7 @@ int main()
 						coord.X = 40;
 						coord.Y = 14;
 						SetConsoleCursorPosition(hConsole, coord);
-						if (angle - newangle != 0) {
+						if (angle - newangle != 0.0) {
 							SetConsoleTextAttribute(hConsole, 0x2f);
 							printf("Snapped");
 						}
@@ -293,14 +293,14 @@ int main()
 
 				// apply accel
 				accelSens = var_sens;							// start with in-game sens so accel calc scales the same
-				if (var_accel > 0) {
+				if (var_accel > 0.0) {
 					rate = hypot(dx, dy) / frameTime_ms;	// calculate velocity of mouse based on deltas
 					rate -= var_offset;							// offset affects the rate that accel sees
-					if (rate > 0) {
+					if (rate > 0.0) {
 						rate *= var_accel;
-						power = var_power - 1;
-						if (power < 0) {
-							power = 0;							// clamp power at lower bound of 0
+						power = var_power - 1.0;
+						if (power < 0.0) {
+							power = 0.0;							// clamp power at lower bound of 0
 						}
 						accelSens += pow(rate, power);
 					}
@@ -311,7 +311,7 @@ int main()
 						SetConsoleCursorPosition(hConsole, coord);
 					}
 
-					if (var_senscap > 0 && accelSens >= var_senscap) {
+					if (var_senscap > 0.0 && accelSens >= var_senscap) {
 						accelSens = var_senscap;				// clamp post-accel sensitivity at senscap
 						if (debugOutput) {
 							SetConsoleTextAttribute(hConsole, 0x2f);
@@ -360,11 +360,11 @@ int main()
 					coord.X = 40;
 					coord.Y = 7;
 					SetConsoleCursorPosition(hConsole, coord);
-					if (accelSens > 1) {
+					if (accelSens > 1.0) {
 						SetConsoleTextAttribute(hConsole, 0x2f);
 						printf("Accel +");
 					}
-					else if (accelSens < 1) {
+					else if (accelSens < 1.0) {
 						SetConsoleTextAttribute(hConsole, 0x4f);
 						printf("Accel -");
 					}
