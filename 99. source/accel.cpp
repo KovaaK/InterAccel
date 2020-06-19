@@ -32,14 +32,14 @@ int main()
 	} settings;
 
 	double
-		frameTime_ms = 0.0,
+		frameTime_ms { 0.0 },
 		dx,
 		dy,
 		accelSens,
 		rate,
 		power,
-		carryX = 0.0,
-		carryY = 0.0,
+		carryX { 0.0 },
+		carryY { 0.0 },
 		angle,
 		newangle,
 		variableValue;
@@ -232,9 +232,7 @@ int main()
 					dy = hypot(dx, dy) * sin(newangle);
 
 					if (debugOutput) {
-
-						coord.X = 40;
-						coord.Y = 14;
+						coord = { 40, 14 };
 						SetConsoleCursorPosition(hConsole, coord);
 						if (angle - newangle != 0.0) {
 							SetConsoleTextAttribute(hConsole, 0x2f);
@@ -259,8 +257,7 @@ int main()
 					rate = hypot(dx, dy);
 
 					if (debugOutput) {
-						coord.X = 40;
-						coord.Y = 15;
+						coord = { 40, 15 };
 						SetConsoleCursorPosition(hConsole, coord);
 					}
 
@@ -295,8 +292,7 @@ int main()
 					}
 
 					if (debugOutput) {
-						coord.X = 40;
-						coord.Y = 8;
+						coord = { 40, 8 };
 						SetConsoleCursorPosition(hConsole, coord);
 					}
 
@@ -336,8 +332,7 @@ int main()
 				carryY = dy - floor(dy);
 
 				if (debugOutput) {
-					coord.X = 0;
-					coord.Y = 20;
+					coord = { 0, 20 };
 					SetConsoleCursorPosition(hConsole, coord);
 					SetConsoleTextAttribute(hConsole, FOREGROUND_INTENSITY);
 					printf("input    - X: %05d   Y: %05d\n", mstroke.x, mstroke.y);
@@ -346,8 +341,7 @@ int main()
 					SetConsoleTextAttribute(hConsole, FOREGROUND_INTENSITY);
 
 
-					coord.X = 40;
-					coord.Y = 7;
+					coord = { 40, 7 };
 					SetConsoleCursorPosition(hConsole, coord);
 					if (accelSens > 1.0) {
 						SetConsoleTextAttribute(hConsole, 0x2f);
