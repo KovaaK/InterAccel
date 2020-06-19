@@ -42,12 +42,7 @@ int main()
 		newangle,
 		variableValue;
 
-	bool debugOutput = false, garbageFile = false;
-	char variableName[24];
-	COORD coord;
-
-	HANDLE hConsole;
-	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
 	
 	CONSOLE_FONT_INFOEX cfi;
@@ -60,18 +55,16 @@ int main()
 	wcscpy(cfi.FaceName, L"Consolas");
 	SetCurrentConsoleFontEx(hConsole, FALSE, &cfi);
 	
-
+	COORD coord;
 	coord.X = 80;
 	coord.Y = 25;
 	SetConsoleScreenBufferSize(hConsole, coord);
 	
 	SMALL_RECT conSize;
-
 	conSize.Left = 0;
 	conSize.Top = 0;
 	conSize.Right = coord.X - 1;
 	conSize.Bottom = coord.Y - 1;
-
 	SetConsoleWindowInfo(hConsole, TRUE, &conSize);
 
 	SetConsoleTextAttribute(hConsole, 0x0f);
@@ -84,7 +77,8 @@ int main()
 
 	// read variables once at runtime
 	FILE *fp;
-
+	bool debugOutput = false, garbageFile = false;
+	char variableName[24];
 	if ((fp = fopen("settings.txt", "r+")) == NULL) {
 		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 		printf("* Cannot read from settings file. Using defaults.\n");
