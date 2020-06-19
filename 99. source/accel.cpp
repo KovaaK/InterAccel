@@ -47,26 +47,20 @@ int main()
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
 	
-	CONSOLE_FONT_INFOEX cfi;
-	cfi.cbSize = sizeof cfi;
-	cfi.nFont = 0;
-	cfi.dwFontSize.X = 0;
-	cfi.dwFontSize.Y = 14;
-	cfi.FontFamily = FF_DONTCARE;
-	cfi.FontWeight = FW_NORMAL;
-	wcscpy(cfi.FaceName, L"Consolas");
+	CONSOLE_FONT_INFOEX cfi {
+		sizeof(cfi),
+		0,
+		{ 0, 14 },
+		FF_DONTCARE,
+		FW_NORMAL,
+		L"Consolas"
+	};
 	SetCurrentConsoleFontEx(hConsole, FALSE, &cfi);
 	
-	COORD coord;
-	coord.X = 80;
-	coord.Y = 25;
+	COORD coord { 80, 25 };
 	SetConsoleScreenBufferSize(hConsole, coord);
 	
-	SMALL_RECT conSize;
-	conSize.Left = 0;
-	conSize.Top = 0;
-	conSize.Right = coord.X - 1;
-	conSize.Bottom = coord.Y - 1;
+	SMALL_RECT conSize { 0, 0, coord.X - 1, coord.Y - 1 };
 	SetConsoleWindowInfo(hConsole, TRUE, &conSize);
 
 	SetConsoleTextAttribute(hConsole, 0x0f);
