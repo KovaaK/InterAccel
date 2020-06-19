@@ -216,7 +216,7 @@ int main()
 					newangle = angle = atan2(dy, dx);
 
 
-					if (fabs(cos(angle)) < (settings.angleSnap*M_PI / 180.0)) {	// test for vertical
+					if (fabs(cos(angle)) < (settings.angleSnap * M_PI / 180.0)) {	// test for vertical
 						if (sin(angle) > 0.0) {
 							newangle = M_PI / 2.0;
 						}
@@ -225,7 +225,7 @@ int main()
 						}
 					}
 					else
-						if (fabs(sin(angle)) < (settings.angleSnap*M_PI / 180.0)) {	// test for horizontal
+						if (fabs(sin(angle)) < (settings.angleSnap * M_PI / 180.0)) {	// test for horizontal
 							if (cos(angle) < 0.0) {
 								newangle = M_PI;
 							}
