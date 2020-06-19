@@ -16,6 +16,20 @@ int main()
 
 	interception_set_filter(context, interception_is_mouse, INTERCEPTION_FILTER_MOUSE_MOVE);
 
+	struct AccelSettings {
+		double sens { 1.0 };
+		double accel { 0.0 };
+		double senscap { 0.0 };
+		double offset { 0.0 };
+		double power { 2.0 };
+		double preScaleX { 1.0 };
+		double preScaleY { 1.0 };
+		double postScaleX { 1.0 };
+		double postScaleY { 1.0 };
+		double angle { 0.0 };
+		double angleSnap { 0.0 };
+		double speedCap { 0.0 };
+	} settings;
 
 	double
 		frameTime_ms = 0.0,
@@ -26,18 +40,6 @@ int main()
 		power,
 		carryX = 0.0,
 		carryY = 0.0,
-		var_sens = 1.0,
-		var_accel = 0.0,
-		var_senscap = 0.0,
-		var_offset = 0.0,
-		var_power = 2.0,
-		var_preScaleX = 1.0,
-		var_preScaleY = 1.0,
-		var_postScaleX = 1.0,
-		var_postScaleY = 1.0,
-		var_angle = 0.0,
-		var_angleSnap = 0.0,
-		var_speedCap = 0.0,
 		angle,
 		newangle,
 		variableValue;
@@ -90,51 +92,51 @@ int main()
 
 			if (strcmp(variableName, "Sensitivity") == 0)
 			{
-				var_sens = variableValue;
+				settings.sens = variableValue;
 			}
 			else if (strcmp(variableName, "Acceleration") == 0)
 			{
-				var_accel = variableValue;
+				settings.accel = variableValue;
 			}
 			else if (strcmp(variableName, "SensitivityCap") == 0)
 			{
-				var_senscap = variableValue;
+				settings.senscap = variableValue;
 			}
 			else if (strcmp(variableName, "Offset") == 0)
 			{
-				var_offset = variableValue;
+				settings.offset = variableValue;
 			}
 			else if (strcmp(variableName, "Power") == 0)
 			{
-				var_power = variableValue;
+				settings.power = variableValue;
 			}
 			else if (strcmp(variableName, "Pre-ScaleX") == 0)
 			{
-				var_preScaleX = variableValue;
+				settings.preScaleX = variableValue;
 			}
 			else if (strcmp(variableName, "Pre-ScaleY") == 0)
 			{
-				var_preScaleY = variableValue;
+				settings.preScaleY = variableValue;
 			}
 			else if (strcmp(variableName, "Post-ScaleX") == 0)
 			{
-				var_postScaleX = variableValue;
+				settings.postScaleX = variableValue;
 			}
 			else if (strcmp(variableName, "Post-ScaleY") == 0)
 			{
-				var_postScaleY = variableValue;
+				settings.postScaleY = variableValue;
 			}
 			else if (strcmp(variableName, "AngleAdjustment") == 0)
 			{
-				var_angle = variableValue;
+				settings.angle = variableValue;
 			}
 			else if (strcmp(variableName, "AngleSnapping") == 0)
 			{
-				var_angleSnap = variableValue;
+				settings.angleSnap = variableValue;
 			}
 			else if (strcmp(variableName, "SpeedCap") == 0)
 			{
-				var_speedCap = variableValue;
+				settings.speedCap = variableValue;
 			}
 			else if (strcmp(variableName, "FancyOutput") == 0)
 			{
@@ -162,7 +164,7 @@ int main()
 	printf("\nYour settings are:\n");
 
 	SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN);
-	printf("Sensitivity: %f\nAcceleration: %f\nSensitivity Cap: %f\nOffset: %f\nPower: %f\nPre-Scale: x:%f, y:%f\nPost-Scale: x:%f, y:%f\nAngle Correction: %f\nAngle Snapping: %f\nSpeed Cap: %f\n\n", var_sens, var_accel, var_senscap, var_offset, var_power, var_preScaleX, var_preScaleY, var_postScaleX, var_postScaleY, var_angle, var_angleSnap, var_speedCap);
+	printf("Sensitivity: %f\nAcceleration: %f\nSensitivity Cap: %f\nOffset: %f\nPower: %f\nPre-Scale: x:%f, y:%f\nPost-Scale: x:%f, y:%f\nAngle Correction: %f\nAngle Snapping: %f\nSpeed Cap: %f\n\n", settings.sens, settings.accel, settings.senscap, settings.offset, settings.power, settings.preScaleX, settings.preScaleY, settings.postScaleX, settings.postScaleY, settings.angle, settings.angleSnap, settings.speedCap);
 	SetConsoleTextAttribute(hConsole, FOREGROUND_INTENSITY);
 
 
@@ -200,21 +202,21 @@ int main()
 				dy = (double) mstroke.y;
 
 				// angle correction
-				if (var_angle) {
+				if (settings.angle) {
 					angle = atan2(dy, dx);
 
-					angle += (var_angle * M_PI / 180.0); // apply adjustment in radians
+					angle += (settings.angle * M_PI / 180.0); // apply adjustment in radians
 
 					dx = hypot(dx, dy) * cos(angle); // convert back to cartesian
 					dy = hypot(dx, dy) * sin(angle);
 				}
 
 				// angle snapping
-				if (var_angleSnap) {
+				if (settings.angleSnap) {
 					newangle = angle = atan2(dy, dx);
 
 
-					if (fabs(cos(angle)) < (var_angleSnap*M_PI / 180.0)) {	// test for vertical
+					if (fabs(cos(angle)) < (settings.angleSnap*M_PI / 180.0)) {	// test for vertical
 						if (sin(angle) > 0.0) {
 							newangle = M_PI / 2.0;
 						}
@@ -223,7 +225,7 @@ int main()
 						}
 					}
 					else
-						if (fabs(sin(angle)) < (var_angleSnap*M_PI / 180.0)) {	// test for horizontal
+						if (fabs(sin(angle)) < (settings.angleSnap*M_PI / 180.0)) {	// test for horizontal
 							if (cos(angle) < 0.0) {
 								newangle = M_PI;
 							}
@@ -255,11 +257,11 @@ int main()
 				}
 
 				// apply pre-scale
-				dx *= var_preScaleX;
-				dy *= var_preScaleY;
+				dx *= settings.preScaleX;
+				dy *= settings.preScaleY;
 
 				// apply speedcap
-				if (var_speedCap) {
+				if (settings.speedCap) {
 					rate = hypot(dx, dy);
 
 					if (debugOutput) {
@@ -268,9 +270,9 @@ int main()
 						SetConsoleCursorPosition(hConsole, coord);
 					}
 
-					if (rate >= var_speedCap) {
-						dx *= var_speedCap / rate;
-						dy *= var_speedCap / rate;
+					if (rate >= settings.speedCap) {
+						dx *= settings.speedCap / rate;
+						dy *= settings.speedCap / rate;
 						if (debugOutput) {
 							SetConsoleTextAttribute(hConsole, 0x2f);
 							printf("Capped");
@@ -285,13 +287,13 @@ int main()
 				}
 
 				// apply accel
-				accelSens = var_sens;							// start with in-game sens so accel calc scales the same
-				if (var_accel > 0.0) {
+				accelSens = settings.sens;							// start with in-game sens so accel calc scales the same
+				if (settings.accel > 0.0) {
 					rate = hypot(dx, dy) / frameTime_ms;	// calculate velocity of mouse based on deltas
-					rate -= var_offset;							// offset affects the rate that accel sees
+					rate -= settings.offset;							// offset affects the rate that accel sees
 					if (rate > 0.0) {
-						rate *= var_accel;
-						power = var_power - 1.0;
+						rate *= settings.accel;
+						power = settings.power - 1.0;
 						if (power < 0.0) {
 							power = 0.0;							// clamp power at lower bound of 0
 						}
@@ -304,8 +306,8 @@ int main()
 						SetConsoleCursorPosition(hConsole, coord);
 					}
 
-					if (var_senscap > 0.0 && accelSens >= var_senscap) {
-						accelSens = var_senscap;				// clamp post-accel sensitivity at senscap
+					if (settings.senscap > 0.0 && accelSens >= settings.senscap) {
+						accelSens = settings.senscap;				// clamp post-accel sensitivity at senscap
 						if (debugOutput) {
 							SetConsoleTextAttribute(hConsole, 0x2f);
 							printf("Capped");
@@ -323,13 +325,13 @@ int main()
 
 
 				}
-				accelSens /= var_sens;							// divide by in-game sens as game will multiply it out
+				accelSens /= settings.sens;							// divide by in-game sens as game will multiply it out
 				dx *= accelSens;								// apply accel to horizontal
 				dy *= accelSens;
 
 				// apply post-scale
-				dx *= var_postScaleX;
-				dy *= var_postScaleY;
+				dx *= settings.postScaleX;
+				dy *= settings.postScaleY;
 
 				// add remainder from previous cycle
 				dx += carryX;
