@@ -78,7 +78,7 @@ int main()
 
 	SetConsoleTextAttribute(hConsole, 0x0f);
 	printf("povohat's quake live accel emulator v0.000002\n=============================================\n\n");
-	SetConsoleTextAttribute(hConsole, 0x08);
+	SetConsoleTextAttribute(hConsole, FOREGROUND_INTENSITY);
 
 
 	printf("Opening settings file...\n");
@@ -88,9 +88,9 @@ int main()
 	FILE *fp;
 
 	if ((fp = fopen("settings.txt", "r+")) == NULL) {
-		SetConsoleTextAttribute(hConsole, 0x04);
+		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 		printf("* Cannot read from settings file. Using defaults.\n");
-		SetConsoleTextAttribute(hConsole, 0x08);
+		SetConsoleTextAttribute(hConsole, FOREGROUND_INTENSITY);
 	}
 	else
 	{
@@ -162,21 +162,21 @@ int main()
 	}
 
 	if (garbageFile) {
-		SetConsoleTextAttribute(hConsole, 0x04);
+		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 		printf("* Your settings.txt has garbage in it which is being ignored\n");
-		SetConsoleTextAttribute(hConsole, 0x08);
+		SetConsoleTextAttribute(hConsole, FOREGROUND_INTENSITY);
 	}
 
 	printf("\nYour settings are:\n");
 
-	SetConsoleTextAttribute(hConsole, 0x02);
+	SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN);
 	printf("Sensitivity: %f\nAcceleration: %f\nSensitivity Cap: %f\nOffset: %f\nPower: %f\nPre-Scale: x:%f, y:%f\nPost-Scale: x:%f, y:%f\nAngle Correction: %f\nAngle Snapping: %f\nSpeed Cap: %f\n\n", var_sens, var_accel, var_senscap, var_offset, var_power, var_preScaleX, var_preScaleY, var_postScaleX, var_postScaleY, var_angle, var_angleSnap, var_speedCap);
-	SetConsoleTextAttribute(hConsole, 0x08);
+	SetConsoleTextAttribute(hConsole, FOREGROUND_INTENSITY);
 
 
 	SetConsoleTextAttribute(hConsole, 0x4f);
 	printf(" [CTRL+C] to QUIT ");
-	SetConsoleTextAttribute(hConsole, 0x08);
+	SetConsoleTextAttribute(hConsole, FOREGROUND_INTENSITY);
 
 	if (!debugOutput) {
 		printf("\n\nSet 'FancyOutput = 1' in settings.txt for realtime data\n(debug use only: may result in some latency)");
@@ -257,7 +257,7 @@ int main()
 						else {
 							printf("       ");
 						}
-						SetConsoleTextAttribute(hConsole, 0x08);
+						SetConsoleTextAttribute(hConsole, FOREGROUND_INTENSITY);
 
 					}
 						
@@ -284,7 +284,7 @@ int main()
 						if (debugOutput) {
 							SetConsoleTextAttribute(hConsole, 0x2f);
 							printf("Capped");
-							SetConsoleTextAttribute(hConsole, 0x08);
+							SetConsoleTextAttribute(hConsole, FOREGROUND_INTENSITY);
 						}
 					}
 					else {
@@ -328,7 +328,7 @@ int main()
 					}
 
 					if (debugOutput) {
-						SetConsoleTextAttribute(hConsole, 0x08);
+						SetConsoleTextAttribute(hConsole, FOREGROUND_INTENSITY);
 					}
 
 
@@ -353,11 +353,11 @@ int main()
 					coord.X = 0;
 					coord.Y = 20;
 					SetConsoleCursorPosition(hConsole, coord);
-					SetConsoleTextAttribute(hConsole, 0x08);
+					SetConsoleTextAttribute(hConsole, FOREGROUND_INTENSITY);
 					printf("input    - X: %05d   Y: %05d\n", mstroke.x, mstroke.y);
 					printf("output   - X: %05d   Y: %05d    accel sens: %.3f      \n", (int)floor(dx), (int)floor(dy), accelSens);
 					printf("subpixel - X: %.3f   Y: %.3f    frame time: %.3f      ", carryX, carryY, frameTime_ms);
-					SetConsoleTextAttribute(hConsole, 0x08);
+					SetConsoleTextAttribute(hConsole, FOREGROUND_INTENSITY);
 
 
 					coord.X = 40;
@@ -374,7 +374,7 @@ int main()
 					else {
 						printf("       ");
 					}
-					SetConsoleTextAttribute(hConsole, 0x08);
+					SetConsoleTextAttribute(hConsole, FOREGROUND_INTENSITY);
 
 				}
 
