@@ -4,8 +4,7 @@
 #include <cmath>
 #include <iostream>
 
-int main()
-{
+int main() {
 	InterceptionContext context { interception_create_context() };
 	InterceptionDevice device;
 	InterceptionStroke stroke;
@@ -82,68 +81,38 @@ int main()
 		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 		printf("* Cannot read from settings file. Using defaults.\n");
 		SetConsoleTextAttribute(hConsole, FOREGROUND_INTENSITY);
-	}
-	else
-	{
+	} else {
 		for (int i { 0 }; i < 99 && fscanf(fp, "%s = %lf", &variableName, &variableValue) != EOF; ++i) {
 
-			if (strcmp(variableName, "Sensitivity") == 0)
-			{
+			if (strcmp(variableName, "Sensitivity") == 0) {
 				settings.sens = variableValue;
-			}
-			else if (strcmp(variableName, "Acceleration") == 0)
-			{
+			} else if (strcmp(variableName, "Acceleration") == 0) {
 				settings.accel = variableValue;
-			}
-			else if (strcmp(variableName, "SensitivityCap") == 0)
-			{
+			} else if (strcmp(variableName, "SensitivityCap") == 0) {
 				settings.senscap = variableValue;
-			}
-			else if (strcmp(variableName, "Offset") == 0)
-			{
+			} else if (strcmp(variableName, "Offset") == 0) {
 				settings.offset = variableValue;
-			}
-			else if (strcmp(variableName, "Power") == 0)
-			{
+			} else if (strcmp(variableName, "Power") == 0) {
 				settings.power = variableValue;
-			}
-			else if (strcmp(variableName, "Pre-ScaleX") == 0)
-			{
+			} else if (strcmp(variableName, "Pre-ScaleX") == 0) {
 				settings.preScaleX = variableValue;
-			}
-			else if (strcmp(variableName, "Pre-ScaleY") == 0)
-			{
+			} else if (strcmp(variableName, "Pre-ScaleY") == 0) {
 				settings.preScaleY = variableValue;
-			}
-			else if (strcmp(variableName, "Post-ScaleX") == 0)
-			{
+			} else if (strcmp(variableName, "Post-ScaleX") == 0) {
 				settings.postScaleX = variableValue;
-			}
-			else if (strcmp(variableName, "Post-ScaleY") == 0)
-			{
+			} else if (strcmp(variableName, "Post-ScaleY") == 0) {
 				settings.postScaleY = variableValue;
-			}
-			else if (strcmp(variableName, "AngleAdjustment") == 0)
-			{
+			} else if (strcmp(variableName, "AngleAdjustment") == 0) {
 				settings.angle = variableValue;
-			}
-			else if (strcmp(variableName, "AngleSnapping") == 0)
-			{
+			} else if (strcmp(variableName, "AngleSnapping") == 0) {
 				settings.angleSnap = variableValue;
-			}
-			else if (strcmp(variableName, "SpeedCap") == 0)
-			{
+			} else if (strcmp(variableName, "SpeedCap") == 0) {
 				settings.speedCap = variableValue;
-			}
-			else if (strcmp(variableName, "FancyOutput") == 0)
-			{
+			} else if (strcmp(variableName, "FancyOutput") == 0) {
 				if (variableValue != 0) {
 					debugOutput = true;
 				}
-				
-			}
-			else
-			{
+			} else {
 				garbageFile = true;
 			}
 		}
@@ -202,11 +171,9 @@ int main()
 	QueryPerformanceCounter(&oldFrameTime);
 	QueryPerformanceFrequency(&PCfreq);
 
-	while (interception_receive(context, device = interception_wait(context), &stroke, 1) > 0)
-	{
+	while (interception_receive(context, device = interception_wait(context), &stroke, 1) > 0) {
 
-		if (interception_is_mouse(device))
-		{
+		if (interception_is_mouse(device)) {
 			InterceptionMouseStroke &mstroke { *(InterceptionMouseStroke *)&stroke };
 
 			if (!(mstroke.flags & INTERCEPTION_MOUSE_MOVE_ABSOLUTE)) {
@@ -214,8 +181,9 @@ int main()
 				// figure out frametime
 				QueryPerformanceCounter(&frameTime);
 				frameTime_ms = (double) (frameTime.QuadPart - oldFrameTime.QuadPart) * 1000.0 / PCfreq.QuadPart;
-				if (frameTime_ms > 200.0)
+				if (frameTime_ms > 200.0) {
 					frameTime_ms = 200.0;
+				}
 
 				// retrieve new mouse data
 				dx = (double) mstroke.x;
@@ -239,21 +207,18 @@ int main()
 					if (fabs(cos(angle)) < (settings.angleSnap * M_PI / 180.0)) {	// test for vertical
 						if (sin(angle) > 0.0) {
 							newangle = M_PI / 2.0;
-						}
-						else {
+						} else {
 							newangle = 3.0 * M_PI / 2.0;
 						}
-					}
-					else
+					} else {
 						if (fabs(sin(angle)) < (settings.angleSnap * M_PI / 180.0)) {	// test for horizontal
 							if (cos(angle) < 0.0) {
 								newangle = M_PI;
-							}
-							else {
+							} else {
 								newangle = 0.0;
 							}
 						}
-
+					}
 					dx = hypot(dx, dy) * cos(newangle); // convert back to cartesian
 					dy = hypot(dx, dy) * sin(newangle);
 
@@ -263,8 +228,7 @@ int main()
 						if (angle - newangle != 0.0) {
 							SetConsoleTextAttribute(hConsole, 0x2f);
 							printf("Snapped");
-						}
-						else {
+						} else {
 							printf("       ");
 						}
 						SetConsoleTextAttribute(hConsole, FOREGROUND_INTENSITY);
@@ -295,8 +259,7 @@ int main()
 							printf("Capped");
 							SetConsoleTextAttribute(hConsole, FOREGROUND_INTENSITY);
 						}
-					}
-					else {
+					} else {
 						if (debugOutput) {
 							printf("      ");
 						}							
@@ -372,12 +335,10 @@ int main()
 					if (accelSens > 1.0) {
 						SetConsoleTextAttribute(hConsole, 0x2f);
 						printf("Accel +");
-					}
-					else if (accelSens < 1.0) {
+					} else if (accelSens < 1.0) {
 						SetConsoleTextAttribute(hConsole, 0x4f);
 						printf("Accel -");
-					}
-					else {
+					} else {
 						printf("       ");
 					}
 					SetConsoleTextAttribute(hConsole, FOREGROUND_INTENSITY);
@@ -396,6 +357,4 @@ int main()
 	}
 
 	interception_destroy_context(context);
-
-	return 0;
 }
