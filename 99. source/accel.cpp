@@ -6,13 +6,11 @@
 
 int main()
 {
-	InterceptionContext context;
+	InterceptionContext context { interception_create_context() };
 	InterceptionDevice device;
 	InterceptionStroke stroke;
 
 	SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
-
-	context = interception_create_context();
 
 	interception_set_filter(context, interception_is_mouse, INTERCEPTION_FILTER_MOUSE_MOVE);
 
@@ -44,7 +42,7 @@ int main()
 		newangle,
 		variableValue;
 
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	HANDLE hConsole { GetStdHandle(STD_OUTPUT_HANDLE) };
 
 	
 	CONSOLE_FONT_INFOEX cfi {
@@ -60,7 +58,12 @@ int main()
 	COORD coord { 80, 25 };
 	SetConsoleScreenBufferSize(hConsole, coord);
 	
-	SMALL_RECT conSize { 0, 0, coord.X - 1, coord.Y - 1 };
+	SMALL_RECT conSize {
+		0,
+		0,
+		static_cast<SHORT>(coord.X - 1),
+		static_cast<SHORT>(coord.Y - 1)
+	};
 	SetConsoleWindowInfo(hConsole, TRUE, &conSize);
 
 	SetConsoleTextAttribute(hConsole, 0x0f);
@@ -73,7 +76,7 @@ int main()
 
 	// read variables once at runtime
 	FILE *fp;
-	bool debugOutput = false, garbageFile = false;
+	bool debugOutput { false }, garbageFile { false };
 	char variableName[24];
 	if ((fp = fopen("settings.txt", "r+")) == NULL) {
 		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
@@ -82,7 +85,7 @@ int main()
 	}
 	else
 	{
-		for (int i = 0; i < 99 && fscanf(fp, "%s = %lf", &variableName, &variableValue) != EOF; i++) {
+		for (int i { 0 }; i < 99 && fscanf(fp, "%s = %lf", &variableName, &variableValue) != EOF; ++i) {
 
 			if (strcmp(variableName, "Sensitivity") == 0)
 			{
@@ -181,7 +184,7 @@ int main()
 
 		if (interception_is_mouse(device))
 		{
-			InterceptionMouseStroke &mstroke = *(InterceptionMouseStroke *)&stroke;
+			InterceptionMouseStroke &mstroke { *(InterceptionMouseStroke *)&stroke };
 
 			if (!(mstroke.flags & INTERCEPTION_MOUSE_MOVE_ABSOLUTE)) {
 
