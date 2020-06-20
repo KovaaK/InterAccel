@@ -78,7 +78,7 @@ int main()
 	FILE *fp;
 	bool debugOutput { false }, garbageFile { false };
 	char variableName[24];
-	if ((fp = fopen("settings.txt", "r+")) == NULL) {
+	if ((fp = fopen("settings.txt", "r+")) == nullptr) {
 		SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 		printf("* Cannot read from settings file. Using defaults.\n");
 		SetConsoleTextAttribute(hConsole, FOREGROUND_INTENSITY);
