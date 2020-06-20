@@ -161,7 +161,30 @@ int main()
 	printf("\nYour settings are:\n");
 
 	SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN);
-	printf("Sensitivity: %f\nAcceleration: %f\nSensitivity Cap: %f\nOffset: %f\nPower: %f\nPre-Scale: x:%f, y:%f\nPost-Scale: x:%f, y:%f\nAngle Correction: %f\nAngle Snapping: %f\nSpeed Cap: %f\n\n", settings.sens, settings.accel, settings.senscap, settings.offset, settings.power, settings.preScaleX, settings.preScaleY, settings.postScaleX, settings.postScaleY, settings.angle, settings.angleSnap, settings.speedCap);
+	printf(
+		"Sensitivity: %f\n"
+		"Acceleration: %f\n"
+		"Sensitivity Cap: %f\n"
+		"Offset: %f\n"
+		"Power: %f\n"
+		"Pre-Scale: x:%f, y:%f\n"
+		"Post-Scale: x:%f, y:%f\n"
+		"Angle Correction: %f\n"
+		"Angle Snapping: %f\n"
+		"Speed Cap: %f\n\n",
+		settings.sens,
+		settings.accel,
+		settings.senscap,
+		settings.offset,
+		settings.power,
+		settings.preScaleX,
+		settings.preScaleY,
+		settings.postScaleX,
+		settings.postScaleY,
+		settings.angle,
+		settings.angleSnap,
+		settings.speedCap
+	);
 	SetConsoleTextAttribute(hConsole, FOREGROUND_INTENSITY);
 
 
@@ -338,9 +361,9 @@ int main()
 					coord = { 0, 20 };
 					SetConsoleCursorPosition(hConsole, coord);
 					SetConsoleTextAttribute(hConsole, FOREGROUND_INTENSITY);
-					printf("input    - X: %05d   Y: %05d\n", mstroke.x, mstroke.y);
-					printf("output   - X: %05d   Y: %05d    accel sens: %.3f      \n", (int)floor(dx), (int)floor(dy), accelSens);
-					printf("subpixel - X: %.3f   Y: %.3f    frame time: %.3f      ", carryX, carryY, frameTime_ms);
+					printf("input    - X: %05d\tY: %05d\n", mstroke.x, mstroke.y);
+					printf("output   - X: %05d\tY: %05d\taccel sens: %.3f\n", (int)floor(dx), (int)floor(dy), accelSens);
+					printf("subpixel - X: %.3f\tY: %.3f\tframe time: %.3f\n", carryX, carryY, frameTime_ms);
 					SetConsoleTextAttribute(hConsole, FOREGROUND_INTENSITY);
 
 
