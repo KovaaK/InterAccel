@@ -152,6 +152,12 @@ Global $senscapscaleitem2, $accelscaleitem2, $lockprescaleitem
 Global $wizardoption, $mousesettings
 Global $hyperlink, $Dummy
 Global $CurrentProfile = ""
+
+;Stupid little hacky fix. I don't know why this works
+$ManualTriggers = ""
+$ManualActives = ""
+$ManualProfiles = ""
+
 ; ini-related stuff
 Global $ini_path = $file_path & "settings.ini"
 Global $graphdensity, $graph_x, $graph_y, $frametime_ms, $mouse_dpi, $graph_scale
