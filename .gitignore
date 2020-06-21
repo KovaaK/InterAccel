@@ -1,4 +1,5 @@
 
+99. source/test2.vcxproj.user
 99. source/.vs/test2/v16/.suo
 99. source/.vs/test2/v16/Browse.VC.db
 99. source/.vs/test2/v16/ipch/AutoPCH/29fee5b4142ba19f/ACCEL.ipch
@@ -19,7 +20,6 @@
 99. source/x64/Release/test2.vcxproj.FileListAbsolute.txt
 99. source/x64/Release/utils.obj
 99. source/x64/Release/vc142.pdb
-99. source/test2.vcxproj.user
 99. source/x64/Debug/accel.obj
 99. source/x64/Debug/test2.exe
 99. source/x64/Debug/test2.ilk
