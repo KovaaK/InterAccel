@@ -199,6 +199,10 @@ Func _ConvertAccelMode($input)	;return accelmode as a number for settings.txt
 			Return 0
 		Case "Natural"
 			Return 1
+		Case 0
+			Return "Quake Live"
+		case 1
+			Return "Natural"
 	EndSwitch
 EndFunc
 
@@ -367,7 +371,7 @@ Func _WriteValsToConfig($silentsuccess = 0) ; Write new values to 'current' valu
    EndIf
 
     ; Write data to the file using the handle returned by FileOpen.
-	FileWriteLine($hFileOpen, "AccelMode = " & GUICtrlRead($m_new_accelmode))
+	FileWriteLine($hFileOpen, "AccelMode = " & _ConvertAccelMode(GUICtrlRead($m_new_accelmode)))
     FileWriteLine($hFileOpen, "Sensitivity = " & GUICtrlRead($m_new_sens))
     FileWriteLine($hFileOpen, "Acceleration = " & GUICtrlRead($m_new_accel))
     FileWriteLine($hFileOpen, "SensitivityCap = " & GUICtrlRead($m_new_senscap))
@@ -423,8 +427,8 @@ Func _ReadValsFromConfig() ; Get existing values from the Config
 	  If @error = -1 Then ExitLoop
 	  $aVariable = StringSplit($line," = ",1)
 	  If $aVariable[1] == "AccelMode" Then
-		 GUICtrlSetData($m_accelmode, $aVariable[2])
-		 GUICtrlSetData($m_new_accelmode, $aVariable[2])
+		 GUICtrlSetData($m_accelmode, _ConvertAccelMode($aVariable[2]))
+		 GUICtrlSetData($m_new_accelmode, _ConvertAccelMode($aVariable[2]))
 	  ElseIf $aVariable[1] == "Sensitivity" Then
 		 GUICtrlSetData($m_sens, $aVariable[2])
 		 GUICtrlSetData($m_new_sens, $aVariable[2])
