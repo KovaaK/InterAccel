@@ -144,8 +144,8 @@ Thanks to "The Man" and nGolf for the help!
 Global $GraphStamp = 0 ; used to make sure we aren't drawing an old request
 ; These are GUI elements - don't touch these.
 Global $GUI, $Graph, $ProfileGUI, $ProfileLabel, $hyperlink, $Dummy
-Global $m_sens, $m_accel, $m_senscap, $m_offset, $m_power, $m_prexscale, $m_preyscale, $m_postxscale, $m_postyscale, $m_angle, $m_driverenabled, $m_anglesnap, $m_speedcap
-Global $m_new_sens, $m_new_accel, $m_new_senscap, $m_new_offset, $m_new_power, $m_new_prexscale, $m_new_preyscale, $m_new_postxscale, $m_new_postyscale, $m_new_angle, $m_new_driverenabled, $m_new_anglesnap, $m_new_speedcap
+Global $m_accelmode, $m_sens, $m_accel, $m_senscap, $m_offset, $m_power, $m_prexscale, $m_preyscale, $m_postxscale, $m_postyscale, $m_angle, $m_driverenabled, $m_anglesnap, $m_speedcap
+Global $m_new_accelmode, $m_new_sens, $m_new_accel, $m_new_senscap, $m_new_offset, $m_new_power, $m_new_prexscale, $m_new_preyscale, $m_new_postxscale, $m_new_postyscale, $m_new_angle, $m_new_driverenabled, $m_new_anglesnap, $m_new_speedcap
 Global $m_driverenabled, $autoprofilecheckbox, $openprofilebutton, $manualprofilecheckbox
 Global $senscapscaleitem, $accelscaleitem, $lockpostscaleitem
 Global $senscapscaleitem2, $accelscaleitem2, $lockprescaleitem
@@ -273,6 +273,10 @@ EndFunc
 
 Func _WriteValsToConfig($silentsuccess = 0) ; Write new values to 'current' values and settings.txt.
    ; If bad values exist, fail before doing anything.
+   If _StringIsNumber(GUICtrlRead($m_new_accelmode)) = False or Not(Number(GUICtrlRead($m_new_accelmode)) == 0 or Number(GUICtrlRead($m_new_accelmode))  == 1)Then	;FIXME: Needs to only accept 0 and 1 for the moment
+	  MsgBox(0x10, "Failure", "Accel Mode must be either 0 or 1.", 3, $GUI)
+	  Return 1
+   EndIf
    If _StringIsNumber(GUICtrlRead($m_new_sens)) = False or Number(GUICtrlRead($m_new_sens)) <= 0 Then
 	  MsgBox(0x10, "Failure", "Sensitivity must be a number and > 0.", 3, $GUI)
 	  Return 1
@@ -323,6 +327,7 @@ Func _WriteValsToConfig($silentsuccess = 0) ; Write new values to 'current' valu
    EndIf
 
    ; Write new values into current values for GUI.
+   GUICtrlSetData($m_accelmode, _GetNumberFromString(GUICtrlRead($m_new_accelmode)))
    GUICtrlSetData($m_sens, _GetNumberFromString(GUICtrlRead($m_new_sens)))
    GUICtrlSetData($m_accel, _GetNumberFromString(GUICtrlRead($m_new_accel)))
    GUICtrlSetData($m_senscap, _GetNumberFromString(GUICtrlRead($m_new_senscap)))
@@ -353,6 +358,7 @@ Func _WriteValsToConfig($silentsuccess = 0) ; Write new values to 'current' valu
    EndIf
 
     ; Write data to the file using the handle returned by FileOpen.
+	FileWriteLine($hFileOpen, "AccelMode = " & GUICtrlRead($m_new_accelmode))
     FileWriteLine($hFileOpen, "Sensitivity = " & GUICtrlRead($m_new_sens))
     FileWriteLine($hFileOpen, "Acceleration = " & GUICtrlRead($m_new_accel))
     FileWriteLine($hFileOpen, "SensitivityCap = " & GUICtrlRead($m_new_senscap))
@@ -407,7 +413,10 @@ Func _ReadValsFromConfig() ; Get existing values from the Config
 	  $line = FileReadLine($hFileOpen)
 	  If @error = -1 Then ExitLoop
 	  $aVariable = StringSplit($line," = ",1)
-	  If $aVariable[1] == "Sensitivity" Then
+	  If $aVariable[1] == "AccelMode" Then
+		 GUICtrlSetData($m_accelmode, $aVariable[2])
+		 GUICtrlSetData($m_new_accelmode, $aVariable[2])
+	  ElseIf $aVariable[1] == "Sensitivity" Then
 		 GUICtrlSetData($m_sens, $aVariable[2])
 		 GUICtrlSetData($m_new_sens, $aVariable[2])
 	  ElseIf $aVariable[1] == "Acceleration" Then
@@ -459,6 +468,7 @@ EndFunc
 Func _WriteProfile($file, $silentsuccess = 0) ; save current settings to $file
    If StringRight($file, 8) <> ".profile" Then $file &= ".profile"
 
+   IniWrite($file,"MouseSettings","AccelMode",GUICtrlRead($m_accelmode))
    IniWrite($file,"MouseSettings","Sensitivity",GUICtrlRead($m_sens))
    IniWrite($file,"MouseSettings","Acceleration",GUICtrlRead($m_accel))
    IniWrite($file,"MouseSettings","SensitivityCap",GUICtrlRead($m_senscap))
@@ -486,6 +496,8 @@ Func _ReadProfile($file, $silentsuccess = 0) ; read $file to current settings
 	  MsgBox(0, "Warning", $file & " not found.")
 	  Return
    EndIf
+
+   GUICtrlSetData($m_new_accelmode, IniRead($file,"MouseSettings","AccelMode","0"))
    GUICtrlSetData($m_new_sens, IniRead($file,"MouseSettings","Sensitivity","1"))
    GUICtrlSetData($m_new_accel, IniRead($file,"MouseSettings","Acceleration","0"))
    GUICtrlSetData($m_new_senscap, IniRead($file,"MouseSettings","SensitivityCap","0"))
@@ -535,6 +547,7 @@ Func _Draw_Graph() ; Refreshes graph, starts with current values (green line) th
 	  $file = $file_path & $ProfilesChecked[$i]
 	  if NOT(FileExists($file)) then ContinueLoop ; don't load deleted profiles
 
+	  $accelmode = IniRead($file, "MouseSettings","AccelMode","0")
 	  $sens = IniRead($file,"MouseSettings","Sensitivity","1")
 	  $accel = IniRead($file,"MouseSettings","Acceleration","0")
 	  $senscap = IniRead($file,"MouseSettings","SensitivityCap","0")
@@ -558,7 +571,7 @@ Func _Draw_Graph() ; Refreshes graph, starts with current values (green line) th
 	  For $j = 0 to $graph_x Step $graph_x/$graphdensity
 		 If $GraphStamp <> $TestStamp Then Return
 		 If $driverenabled = 1 Then
-			$y = _MouseInputToOutput($j, $sens, $accel, $senscap, $offset, $power, $prescale, $postscale, $speedcap)
+			$y = _MouseInputToOutput($j, $accelmode, $sens, $accel, $senscap, $offset, $power, $prescale, $postscale, $speedcap)
 		 Else
 			$y = 1
 		 EndIf
@@ -583,7 +596,7 @@ Func _Draw_Graph() ; Refreshes graph, starts with current values (green line) th
 	  For $i = 0 to $graph_x Step $graph_x/$graphdensity
 		 If $GraphStamp <> $TestStamp Then Return ; if the global variable changed since we started, stop updating.
 		 If BitAND(GUICtrlRead($m_driverenabled), $GUI_CHECKED) = $GUI_CHECKED Then
-			$y = _MouseInputToOutput($i, GUICtrlRead($m_sens), GUICtrlRead($m_accel), GUICtrlRead($m_senscap), GUICtrlRead($m_offset), GUICtrlRead($m_power), $prescale, $postscale, GUICtrlRead($m_speedcap))
+			$y = _MouseInputToOutput($i, GUICtrlRead($m_accelmode), GUICtrlRead($m_sens), GUICtrlRead($m_accel), GUICtrlRead($m_senscap), GUICtrlRead($m_offset), GUICtrlRead($m_power), $prescale, $postscale, GUICtrlRead($m_speedcap))
 		 Else
 			$y = 1
 		 EndIf
@@ -606,7 +619,7 @@ Func _Draw_Graph() ; Refreshes graph, starts with current values (green line) th
 	  For $i = 0 to $graph_x Step $graph_x/$graphdensity
 		 If $GraphStamp <> $TestStamp Then Return
 		 If BitAND(GUICtrlRead($m_new_driverenabled), $GUI_CHECKED) = $GUI_CHECKED Then
-		   $y = _MouseInputToOutput($i, GUICtrlRead($m_new_sens), GUICtrlRead($m_new_accel), GUICtrlRead($m_new_senscap), GUICtrlRead($m_new_offset), GUICtrlRead($m_new_power), $prescale, $postscale, GUICtrlRead($m_new_speedcap))
+		   $y = _MouseInputToOutput($i, GUICtrlRead($m_new_accelmode), GUICtrlRead($m_new_sens), GUICtrlRead($m_new_accel), GUICtrlRead($m_new_senscap), GUICtrlRead($m_new_offset), GUICtrlRead($m_new_power), $prescale, $postscale, GUICtrlRead($m_new_speedcap))
 		 Else
 			$y = 1
 		 EndIf
@@ -621,9 +634,9 @@ Func _Draw_Graph() ; Refreshes graph, starts with current values (green line) th
 
 EndFunc
 
-Func _MouseInputToOutput($input, $sens, $accel, $senscap, $offset, $power, $prescale, $postscale, $speedcap) ; Calculate the effective sensitivity given an input mouse delta and mouse parameters
+Func _MouseInputToOutput($input, $accelmode, $sens, $accel, $senscap, $offset, $power, $prescale, $postscale, $speedcap) ; Calculate the effective sensitivity given an input mouse delta and mouse parameters
 
-   Local $output, $rate
+   Local $output, $rate, $a
 
    $output = $input ; effectively povohat's dx and dy combined into one var
 
@@ -635,16 +648,25 @@ Func _MouseInputToOutput($input, $sens, $accel, $senscap, $offset, $power, $pres
 
 
    $accelsens = $sens
+   $a = $senscap - $sens
    If $accel > 0 Then
 	  $rate = $output / $frametime_ms
 	  $rate -= $offset
 	  if $rate > 0 Then
-		 $rate *= $accel
-		 $power -= 1
-		 if $power < 0 Then	$power = 0
-		 $accelsens += Exp($power * Log($rate))
-		 if $senscap > 0 AND $accelsens > $senscap Then $accelsens = $senscap
+		  Switch $accelmode
+			  Case 0
+				  $rate *= $accel
+				  $power -= 1
+				  if $power < 0 Then	$power = 0
+				  $accelsens += Exp($power * Log($rate))
+			  Case 1
+				  $rate *= $accel
+				  $rate /= Abs($a)
+				  $rate *= -1
+				  $accelsens += $a - ($a * exp($rate))
+		  EndSwitch
 	  EndIf
+	  if $senscap > 0 AND $accelsens > $senscap Then $accelsens = $senscap
    EndIf
    $accelsens /= $sens
    $output *= $accelsens
@@ -928,7 +950,7 @@ Func _Main() ; Draw and handle the GUI
 
    TraySetState()
 
-   $GUI = GUICreate("Intercept Mouse Accel Filter Config",710,500,-1, -1 , BitOR($WS_OVERLAPPEDWINDOW, $WS_CLIPSIBLINGS))
+   $GUI = GUICreate("Intercept Mouse Accel Filter Config",710,540,-1, -1 , BitOR($WS_OVERLAPPEDWINDOW, $WS_CLIPSIBLINGS))
    GUISetState()
    Opt("GUICloseOnESC", 0)
 
@@ -981,6 +1003,9 @@ Func _Main() ; Draw and handle the GUI
    GUICtrlCreateLabel("New", 0, -1) ; next Cell
    GUICtrlCreateLabel("Current", 0, -1) ; next Cell
    GUISetFont (9, 400)
+   GUICtrlCreateLabel("AccelMode", -3 * $widthCell, $heightCell) ; next line
+   $m_new_accelmode = GUICtrlCreateInput("1", 0, -1) ; same line, next cell
+   $m_accelmode = GUICtrlCreateLabel("1", 0, -1) ; same line, next cell
    GUICtrlCreateLabel("Sensitivity", -3 * $widthCell, $heightCell) ; next line
    $m_new_sens = GUICtrlCreateInput("1", 0, -1) ; same line, next cell
    $m_sens = GUICtrlCreateLabel("1", 0, -1) ; same line, next cell
@@ -1024,6 +1049,8 @@ Func _Main() ; Draw and handle the GUI
    _GUIToolTip_SetDelayTime($hToolTip, $TTDT_AUTOPOP, 30000) ; if I set this to 60 seconds, it seems to go back to 5.
    _GUIToolTip_SetDelayTime($hToolTip, $TTDT_RESHOW, 500) ; don't show a new tooltip till 0.5 secs later
    _GUIToolTip_SetMaxTipWidth($hToolTip, 500)
+   Local $h_new_accelmode = GUICtrlGetHandle($m_new_accelmode)
+   _GUIToolTip_AddTool($hToolTip, 0, "This value is used to set which type of acceleration to use.  0 to emulate Quake Live acceleration, 1 for Natural acceleration", $h_new_accelmode)
    Local $h_new_sens = GUICtrlGetHandle($m_new_sens)
    _GUIToolTip_AddTool($hToolTip, 0, "This value is used for replicating QuakeLive mouse settings.  If you aren't coming from QL, leave this value at 1.", $h_new_sens)
    Local $h_new_accel = GUICtrlGetHandle($m_new_accel)
@@ -1055,7 +1082,7 @@ Func _Main() ; Draw and handle the GUI
    ; Local $tempPos = ControlGetPos("", "", $m_angle)
    $checkx = 8
    ; $checky = $tempPos[1] + 23
-   $checky = 427
+   $checky = 458
 
    Local $savebutton, $drawbutton, $msg
    ; Draw the checkbox and buttons
