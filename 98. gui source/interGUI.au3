@@ -199,6 +199,15 @@ Func _GetNumberFromString($input) ; uses the above regular expression to pull a 
    Return "error"
 EndFunc
 
+Func _ConvertAccelMode($input)	;return accelmode as a number for settings.txt
+	Switch $input
+		Case "Quake Live"
+			Return 0
+		Case "Natural"
+			Return 1
+	EndSwitch
+EndFunc
+
 Func _ReadIni() ; Read from settings.ini file
    $graphdensity = IniRead($ini_path,"Graph","Density","200")
    $graph_x = IniRead($ini_path,"Graph","Range_X","50")
@@ -279,8 +288,8 @@ EndFunc
 
 Func _WriteValsToConfig($silentsuccess = 0) ; Write new values to 'current' values and settings.txt.
    ; If bad values exist, fail before doing anything.
-   If _StringIsNumber(GUICtrlRead($m_new_accelmode)) = False or Not(Number(GUICtrlRead($m_new_accelmode)) == 0 or Number(GUICtrlRead($m_new_accelmode))  == 1) Then
-	  MsgBox(0x10, "Failure", "Accel Mode must be either 0 or 1.", 3, $GUI)
+   If Not(GUICtrlRead($m_new_accelmode) == "Quake Live" Or GUICtrlRead($m_new_accelmode) == "Natural") Then
+	   MsgBox(0x10, "Failure", "AccelMode must be either 'Quake Live' or 'Natural'", 3, $GUI)
 	  Return 1
    EndIf
    If _StringIsNumber(GUICtrlRead($m_new_sens)) = False or Number(GUICtrlRead($m_new_sens)) <= 0 Then
@@ -333,7 +342,7 @@ Func _WriteValsToConfig($silentsuccess = 0) ; Write new values to 'current' valu
    EndIf
 
    ; Write new values into current values for GUI.
-   GUICtrlSetData($m_accelmode, _GetNumberFromString(GUICtrlRead($m_new_accelmode)))
+   GUICtrlSetData($m_accelmode, GUICtrlRead($m_new_accelmode))
    GUICtrlSetData($m_sens, _GetNumberFromString(GUICtrlRead($m_new_sens)))
    GUICtrlSetData($m_accel, _GetNumberFromString(GUICtrlRead($m_new_accel)))
    GUICtrlSetData($m_senscap, _GetNumberFromString(GUICtrlRead($m_new_senscap)))
@@ -503,7 +512,7 @@ Func _ReadProfile($file, $silentsuccess = 0) ; read $file to current settings
 	  Return
    EndIf
 
-   GUICtrlSetData($m_new_accelmode, IniRead($file,"MouseSettings","AccelMode","0"))
+   GUICtrlSetData($m_new_accelmode, IniRead($file,"MouseSettings","AccelMode","Quake Live"))
    GUICtrlSetData($m_new_sens, IniRead($file,"MouseSettings","Sensitivity","1"))
    GUICtrlSetData($m_new_accel, IniRead($file,"MouseSettings","Acceleration","0"))
    GUICtrlSetData($m_new_senscap, IniRead($file,"MouseSettings","SensitivityCap","0"))
@@ -553,7 +562,7 @@ Func _Draw_Graph() ; Refreshes graph, starts with current values (green line) th
 	  $file = $file_path & $ProfilesChecked[$i]
 	  if NOT(FileExists($file)) then ContinueLoop ; don't load deleted profiles
 
-	  $accelmode = IniRead($file, "MouseSettings","AccelMode","0")
+	  $accelmode = IniRead($file, "MouseSettings","AccelMode","Quake Live")
 	  $sens = IniRead($file,"MouseSettings","Sensitivity","1")
 	  $accel = IniRead($file,"MouseSettings","Acceleration","0")
 	  $senscap = IniRead($file,"MouseSettings","SensitivityCap","0")
@@ -660,12 +669,12 @@ Func _MouseInputToOutput($input, $accelmode, $sens, $accel, $senscap, $offset, $
 	  $rate -= $offset
 	  if $rate > 0 Then
 		  Switch $accelmode
-			  Case 0
+			  Case "Quake Live"
 				  $rate *= $accel
 				  $power -= 1
 				  if $power < 0 Then	$power = 0
 				  $accelsens += Exp($power * Log($rate))
-			  Case 1
+			  Case "Natural"
 				  $rate *= $accel
 				  $rate /= Abs($a)
 				  $rate *= -1
@@ -956,7 +965,7 @@ Func _Main() ; Draw and handle the GUI
 
    TraySetState()
 
-   $GUI = GUICreate("Intercept Mouse Accel Filter Config",710,540,-1, -1 , BitOR($WS_OVERLAPPEDWINDOW, $WS_CLIPSIBLINGS))
+   $GUI = GUICreate("Intercept Mouse Accel Filter Config",710,530,-1, -1 , BitOR($WS_OVERLAPPEDWINDOW, $WS_CLIPSIBLINGS))
    GUISetState()
    Opt("GUICloseOnESC", 0)
 
@@ -1010,8 +1019,9 @@ Func _Main() ; Draw and handle the GUI
    GUICtrlCreateLabel("Current", 0, -1) ; next Cell
    GUISetFont (9, 400)
    GUICtrlCreateLabel("AccelMode", -3 * $widthCell, $heightCell) ; next line
-   $m_new_accelmode = GUICtrlCreateInput("1", 0, -1) ; same line, next cell
-   $m_accelmode = GUICtrlCreateLabel("1", 0, -1) ; same line, next cell
+   $m_new_accelmode = GUICtrlCreateCombo("Quake Live", 0, -1) ; same line, next cell
+   GUICtrlSetData($m_new_accelmode, "Natural")
+   $m_accelmode = GUICtrlCreateLabel("Quake Live", 0, -1) ; same line, next cell
    GUICtrlCreateLabel("Sensitivity", -3 * $widthCell, $heightCell) ; next line
    $m_new_sens = GUICtrlCreateInput("1", 0, -1) ; same line, next cell
    $m_sens = GUICtrlCreateLabel("1", 0, -1) ; same line, next cell
