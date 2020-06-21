@@ -273,7 +273,7 @@ EndFunc
 
 Func _WriteValsToConfig($silentsuccess = 0) ; Write new values to 'current' values and settings.txt.
    ; If bad values exist, fail before doing anything.
-   If _StringIsNumber(GUICtrlRead($m_new_accelmode)) = False or Not(Number(GUICtrlRead($m_new_accelmode)) == 0 or Number(GUICtrlRead($m_new_accelmode))  == 1)Then	;FIXME: Needs to only accept 0 and 1 for the moment
+   If _StringIsNumber(GUICtrlRead($m_new_accelmode)) = False or Not(Number(GUICtrlRead($m_new_accelmode)) == 0 or Number(GUICtrlRead($m_new_accelmode))  == 1) Then
 	  MsgBox(0x10, "Failure", "Accel Mode must be either 0 or 1.", 3, $GUI)
 	  Return 1
    EndIf
