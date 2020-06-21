@@ -19,7 +19,7 @@ int main()
 
 
 	int
-		var_accelMode = 0;	//FIXME: Accepts negatives, should default to 0
+		var_accelMode = 0;
 
 	double
 		frameTime_ms = 0,
@@ -196,8 +196,9 @@ int main()
 
 	QueryPerformanceCounter(&oldFrameTime);
 	QueryPerformanceFrequency(&PCfreq);
-
-	a = var_senscap - var_sens;		//Set a here because it won't change everytime the loop runs
+	
+	//Pre loop settings
+	a = var_senscap - var_sens;
 
 	while (interception_receive(context, device = interception_wait(context), &stroke, 1) > 0)
 	{
