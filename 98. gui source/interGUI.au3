@@ -195,12 +195,12 @@ EndFunc
 
 Func _ConvertAccelMode($input)	;return accelmode as a number for settings.txt
 	Switch $input
-		Case "Quake Live"
+		Case "QuakeLive"
 			Return 0
 		Case "Natural"
 			Return 1
 		Case 0
-			Return "Quake Live"
+			Return "QuakeLive"
 		case 1
 			Return "Natural"
 	EndSwitch
@@ -286,8 +286,8 @@ EndFunc
 
 Func _WriteValsToConfig($silentsuccess = 0) ; Write new values to 'current' values and settings.txt.
    ; If bad values exist, fail before doing anything.
-   If Not(GUICtrlRead($m_new_accelmode) == "Quake Live" Or GUICtrlRead($m_new_accelmode) == "Natural") Then
-	   MsgBox(0x10, "Failure", "AccelMode must be either 'Quake Live' or 'Natural'", 3, $GUI)
+   If Not(GUICtrlRead($m_new_accelmode) == "QuakeLive" Or GUICtrlRead($m_new_accelmode) == "Natural") Then
+	   MsgBox(0x10, "Failure", "AccelMode must be either 'QuakeLive' or 'Natural'", 3, $GUI)
 	  Return 1
    EndIf
    If _StringIsNumber(GUICtrlRead($m_new_sens)) = False or Number(GUICtrlRead($m_new_sens)) <= 0 Then
@@ -362,6 +362,9 @@ Func _WriteValsToConfig($silentsuccess = 0) ; Write new values to 'current' valu
    ;Disable power during natural accel
    If GUICtrlRead($m_new_accelmode) == "Natural" Then
 	   GUICtrlSetState($m_new_power, $GUI_DISABLE)
+	   If GUICtrlRead($m_new_senscap) <= 1 Then
+		   MsgBox(0x30, "Warning", "While in Natural accel mode, Senscap must be < 1 for accel to take effect.", 3, $GUI)
+	   EndIf
    Else
 	   GUICtrlSetState($m_new_power, $GUI_ENABLE)
    EndIf
@@ -523,7 +526,7 @@ Func _ReadProfile($file, $silentsuccess = 0) ; read $file to current settings
 	  Return
    EndIf
 
-   GUICtrlSetData($m_new_accelmode, IniRead($file,"MouseSettings","AccelMode","Quake Live"))
+   GUICtrlSetData($m_new_accelmode, IniRead($file,"MouseSettings","AccelMode","QuakeLive"))
    GUICtrlSetData($m_new_sens, IniRead($file,"MouseSettings","Sensitivity","1"))
    GUICtrlSetData($m_new_accel, IniRead($file,"MouseSettings","Acceleration","0"))
    GUICtrlSetData($m_new_senscap, IniRead($file,"MouseSettings","SensitivityCap","0"))
@@ -573,7 +576,7 @@ Func _Draw_Graph() ; Refreshes graph, starts with current values (green line) th
 	  $file = $file_path & $ProfilesChecked[$i]
 	  if NOT(FileExists($file)) then ContinueLoop ; don't load deleted profiles
 
-	  $accelmode = IniRead($file, "MouseSettings","AccelMode","Quake Live")
+	  $accelmode = IniRead($file, "MouseSettings","AccelMode","QuakeLive")
 	  $sens = IniRead($file,"MouseSettings","Sensitivity","1")
 	  $accel = IniRead($file,"MouseSettings","Acceleration","0")
 	  $senscap = IniRead($file,"MouseSettings","SensitivityCap","0")
@@ -680,7 +683,7 @@ Func _MouseInputToOutput($input, $accelmode, $sens, $accel, $senscap, $offset, $
 	  $rate -= $offset
 	  if $rate > 0 Then
 		  Switch $accelmode
-			  Case "Quake Live"
+			  Case "QuakeLive"
 				  $rate *= $accel
 				  $power -= 1
 				  if $power < 0 Then	$power = 0
