@@ -298,9 +298,16 @@ Func _WriteValsToConfig($silentsuccess = 0) ; Write new values to 'current' valu
 	  MsgBox(0x10, "Failure", "Acceleration must be a number and >= 0.", 3, $GUI)
 	  Return 1
    EndIf
-   If _StringIsNumber(GUICtrlRead($m_new_senscap)) = False or Number(GUICtrlRead($m_new_senscap)) < 0 Then
-	  MsgBox(0x10, "Failure", "Sensitivity Cap must be a number and >= 0.", 3, $GUI)
-	  Return 1
+   If GUICtrlRead($m_new_accelmode) <> "Natural" Then
+	   If _StringIsNumber(GUICtrlRead($m_new_senscap)) = False or Number(GUICtrlRead($m_new_senscap)) < 0 Then
+		   MsgBox(0x10, "Failure", "Sensitivity Cap must be a number and >= 0.", 3, $GUI)
+		   Return 1
+	   EndIf
+   Else
+	   If _StringIsNumber(GUICtrlRead($m_new_senscap)) = False or Number(GUICtrlRead($m_new_senscap)) < 1 Then	;The limit to 1 senscap changes in natural mode
+		   MsgBox(0x10, "Failure", "While using Natural acceleration Sensitivity Cap must be a number and >= 1.", 3, $GUI)
+		   Return 1
+	   EndIf
    EndIf
    If _StringIsNumber(GUICtrlRead($m_new_speedcap)) = False or Number(GUICtrlRead($m_new_speedcap)) < 0 Then
 	  MsgBox(0x10, "Failure", "Speed Cap must be a number and >= 0. (0 disables)", 3, $GUI)
@@ -362,9 +369,6 @@ Func _WriteValsToConfig($silentsuccess = 0) ; Write new values to 'current' valu
    ;Disable power during natural accel
    If GUICtrlRead($m_new_accelmode) == "Natural" Then
 	   GUICtrlSetState($m_new_power, $GUI_DISABLE)
-	   If GUICtrlRead($m_new_senscap) <= 1 Then
-		   MsgBox(0x30, "Warning", "While in Natural accel mode, Senscap must be < 1 for accel to take effect.", 3, $GUI)
-	   EndIf
    Else
 	   GUICtrlSetState($m_new_power, $GUI_ENABLE)
    EndIf
