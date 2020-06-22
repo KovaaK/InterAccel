@@ -1030,9 +1030,9 @@ Func _Main() ; Draw and handle the GUI
    GUICtrlCreateLabel("Current", 0, -1) ; next Cell
    GUISetFont (9, 400)
    GUICtrlCreateLabel("AccelMode", -3 * $widthCell, $heightCell) ; next line
-   $m_new_accelmode = GUICtrlCreateCombo("Quake Live", 0, -1) ; same line, next cell
+   $m_new_accelmode = GUICtrlCreateCombo("QuakeLive", 0, -1) ; same line, next cell
    GUICtrlSetData($m_new_accelmode, "Natural")
-   $m_accelmode = GUICtrlCreateLabel("Quake Live", 0, -1) ; same line, next cell
+   $m_accelmode = GUICtrlCreateLabel("QuakeLive", 0, -1) ; same line, next cell
    GUICtrlCreateLabel("Sensitivity", -3 * $widthCell, $heightCell) ; next line
    $m_new_sens = GUICtrlCreateInput("1", 0, -1) ; same line, next cell
    $m_sens = GUICtrlCreateLabel("1", 0, -1) ; same line, next cell
@@ -1077,7 +1077,7 @@ Func _Main() ; Draw and handle the GUI
    _GUIToolTip_SetDelayTime($hToolTip, $TTDT_RESHOW, 500) ; don't show a new tooltip till 0.5 secs later
    _GUIToolTip_SetMaxTipWidth($hToolTip, 500)
    Local $h_new_accelmode = GUICtrlGetHandle($m_new_accelmode)
-   _GUIToolTip_AddTool($hToolTip, 0, "This value is used to set which type of acceleration to use.  0 to emulate Quake Live acceleration, 1 for Natural acceleration", $h_new_accelmode)
+   _GUIToolTip_AddTool($hToolTip, 0, "Select which mode of acceleration to use.", $h_new_accelmode)
    Local $h_new_sens = GUICtrlGetHandle($m_new_sens)
    _GUIToolTip_AddTool($hToolTip, 0, "This value is used for replicating QuakeLive mouse settings.  If you aren't coming from QL, leave this value at 1.", $h_new_sens)
    Local $h_new_accel = GUICtrlGetHandle($m_new_accel)
