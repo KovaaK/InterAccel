@@ -359,8 +359,14 @@ Func _WriteValsToConfig($silentsuccess = 0) ; Write new values to 'current' valu
 	  GUICtrlSetState($m_driverenabled, $GUI_UNCHECKED)
    EndIf
 
-   ; Write to Config
+   ;Disable power during natural accel
+   If GUICtrlRead($m_new_accelmode) == "Natural" Then
+	   GUICtrlSetState($m_new_power, $GUI_DISABLE)
+   Else
+	   GUICtrlSetState($m_new_power, $GUI_ENABLE)
+   EndIf
 
+   ; Write to Config
    FileChangeDir(@ScriptDir)
    Local Const $sFilePath = "settings.txt"
    ; Open the file for writing (overwrite current) and store the handle to a variable.
