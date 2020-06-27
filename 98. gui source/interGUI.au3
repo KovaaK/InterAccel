@@ -199,10 +199,15 @@ Func _ConvertAccelMode($input)	;return accelmode as a number for settings.txt
 			Return 0
 		Case "Natural"
 			Return 1
+		Case "Logarithmic"
+			Return 2
 		Case 0
 			Return "QuakeLive"
-		case 1
+		Case 1
 			Return "Natural"
+		Case 2
+			Return "Logarithmic"
+
 	EndSwitch
 EndFunc
 
@@ -286,7 +291,7 @@ EndFunc
 
 Func _WriteValsToConfig($silentsuccess = 0) ; Write new values to 'current' values and settings.txt.
    ; If bad values exist, fail before doing anything.
-   If Not(GUICtrlRead($m_new_accelmode) == "QuakeLive" Or GUICtrlRead($m_new_accelmode) == "Natural") Then
+   If Not(GUICtrlRead($m_new_accelmode) == "QuakeLive" Or GUICtrlRead($m_new_accelmode) == "Natural" Or GUICtrlRead($m_new_accelmode) == "Logarithmic") Then
 	   MsgBox(0x10, "Failure", "AccelMode must be either 'QuakeLive' or 'Natural'", 3, $GUI)
 	  Return 1
    EndIf
@@ -697,6 +702,10 @@ Func _MouseInputToOutput($input, $accelmode, $sens, $accel, $senscap, $offset, $
 				  $rate /= Abs($a)
 				  $rate *= -1
 				  $accelsens += $a - ($a * exp($rate))
+			  Case "Logarithmic"
+				  $rate *= $accel
+				  $rate += 1
+				  $accelsens += Log($rate)
 		  EndSwitch
 	  EndIf
 	  if $senscap > 0 AND $accelsens > $senscap Then $accelsens = $senscap
@@ -1038,7 +1047,7 @@ Func _Main() ; Draw and handle the GUI
    GUISetFont (9, 400)
    GUICtrlCreateLabel("AccelMode", -3 * $widthCell, $heightCell) ; next line
    $m_new_accelmode = GUICtrlCreateCombo("QuakeLive", 0, -1) ; same line, next cell
-   GUICtrlSetData($m_new_accelmode, "Natural")
+   GUICtrlSetData($m_new_accelmode, "Natural|Logarithmic")
    $m_accelmode = GUICtrlCreateLabel("QuakeLive", 0, -1) ; same line, next cell
    GUICtrlCreateLabel("Sensitivity", -3 * $widthCell, $heightCell) ; next line
    $m_new_sens = GUICtrlCreateInput("1", 0, -1) ; same line, next cell

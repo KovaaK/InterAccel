@@ -327,6 +327,11 @@ int main()
 							rate *= -1;
 							accelSens += a - (a * exp(rate));
 							break;
+						case 2:
+							rate *= var_accel;
+							rate += 1;
+							accelSens += log(rate);
+							break;
 						}
 					}
 
