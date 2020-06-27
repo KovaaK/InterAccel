@@ -36,3 +36,4 @@
 99. source/x64/Debug/utils.obj
 99. source/x64/Debug/vc142.idb
 99. source/x64/Debug/vc142.pdb
+99. source/interception.lib
