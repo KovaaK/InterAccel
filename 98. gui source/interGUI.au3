@@ -295,7 +295,7 @@ EndFunc
 Func _WriteValsToConfig($silentsuccess = 0) ; Write new values to 'current' values and settings.txt.
    ; If bad values exist, fail before doing anything.
    If Not(GUICtrlRead($m_new_accelmode) == $mode1 Or GUICtrlRead($m_new_accelmode) == $mode2 Or GUICtrlRead($m_new_accelmode) == $mode3) Then
-	   MsgBox(0x10, "Failure", "AccelMode must be either 'QuakeLive', 'Natural', or 'Logarithmic'", 3, $GUI)
+	   MsgBox(0x10, "Failure", "AccelMode must be one of the listed modes", 3, $GUI)
 	  Return 1
    EndIf
    If _StringIsNumber(GUICtrlRead($m_new_sens)) = False or Number(GUICtrlRead($m_new_sens)) <= 0 Then
