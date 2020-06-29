@@ -29,6 +29,7 @@ int main()
 		rate,
 		power,
 		a,					//Taunty called it 'a' and I'm not creative
+		b,					//var_accel/abs(a)
 		carryX = 0,
 		carryY = 0,
 		var_sens = 1,
@@ -197,8 +198,10 @@ int main()
 	QueryPerformanceCounter(&oldFrameTime);
 	QueryPerformanceFrequency(&PCfreq);
 	
-	//Pre loop settings
+	//Pre-loop calculations
 	a = var_senscap - var_sens;
+	b = var_accel / abs(a);
+	power = var_power - 1 < 0 ? 0 : var_power - 1;
 
 	while (interception_receive(context, device = interception_wait(context), &stroke, 1) > 0)
 	{
@@ -314,23 +317,16 @@ int main()
 					if (rate > 0) {
 						switch (var_accelMode) {
 						case 0:									//Original InterAccel acceleration
-							rate *= var_accel;
-							power = var_power - 1;
-							if (power < 0) {
-								power = 0;							// clamp power at lower bound of 0
-							}
-							accelSens += exp(power * log(rate));	// acceptable substitute for the missing pow() function
+							accelSens += pow((rate*var_accel), power);
 							break;
 						case 1:									//TauntyArmordillo's natural acceleration
-							rate *= var_accel;
-							rate /= abs(a);
-							rate *= -1;
-							accelSens += a - (a * exp(rate));
+							accelSens += a - (a * exp((-rate*b)));
 							break;
-						case 2:
-							rate *= var_accel;
-							rate += 1;
-							accelSens += log(rate);
+						case 2:									//Natural Log acceleration
+							accelSens += log((rate*var_accel) + 1);
+							break;
+						case 3:									//CS:GO/Source style accel
+							accelSens *= pow(++rate, power);
 							break;
 						}
 					}
