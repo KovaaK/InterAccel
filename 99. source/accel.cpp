@@ -18,6 +18,9 @@ int main()
 	interception_set_filter(context, interception_is_mouse, INTERCEPTION_FILTER_MOUSE_MOVE);
 
 
+	int
+		var_accelMode = 0;
+
 	double
 		frameTime_ms = 0,
 		dx,
@@ -25,6 +28,8 @@ int main()
 		accelSens,
 		rate,
 		power,
+		a,					//Taunty called it 'a' and I'm not creative
+		b,					//var_accel/abs(a)
 		carryX = 0,
 		carryY = 0,
 		var_sens = 1,
@@ -78,7 +83,7 @@ int main()
 	SetConsoleWindowInfo(hConsole, TRUE, &conSize);
 
 	SetConsoleTextAttribute(hConsole, 0x0f);
-	printf("povohat's quake live accel emulator v0.000002\n=============================================\n\n");
+	printf("povohat's interception mouse accel\nAdditional contributions by Sidiouth & _m00se_\n==============================================\n\n");
 	SetConsoleTextAttribute(hConsole, 0x08);
 
 
@@ -95,9 +100,13 @@ int main()
 	}
 	else
 	{
-		for (int i = 0; i < 99 && fscanf(fp, "%s = %lf", &variableName, &variableValue) != EOF; i++) {
+		for (int i = 0; i < 99 && fscanf(fp, "%s = %lf", &variableName, &variableValue) != EOF; i++) {		//Doesn't complain if a line in settings.txt is missing
 
-			if (strcmp(variableName, "Sensitivity") == 0)
+			if (strcmp(variableName, "AccelMode") == 0)
+			{
+				var_accelMode = variableValue;
+			}
+			else if (strcmp(variableName, "Sensitivity") == 0)
 			{
 				var_sens = variableValue;
 			}
@@ -171,7 +180,7 @@ int main()
 	printf("\nYour settings are:\n");
 
 	SetConsoleTextAttribute(hConsole, 0x02);
-	printf("Sensitivity: %f\nAcceleration: %f\nSensitivity Cap: %f\nOffset: %f\nPower: %f\nPre-Scale: x:%f, y:%f\nPost-Scale: x:%f, y:%f\nAngle Correction: %f\nAngle Snapping: %f\nSpeed Cap: %f\n\n", var_sens, var_accel, var_senscap, var_offset, var_power, var_preScaleX, var_preScaleY, var_postScaleX, var_postScaleY, var_angle, var_angleSnap, var_speedCap);
+	printf("AccelMode: %i\nSensitivity: %f\nAcceleration: %f\nSensitivity Cap: %f\nOffset: %f\nPower: %f\nPre-Scale: x:%f, y:%f\nPost-Scale: x:%f, y:%f\nAngle Correction: %f\nAngle Snapping: %f\nSpeed Cap: %f\n\n", var_accelMode, var_sens, var_accel, var_senscap, var_offset, var_power, var_preScaleX, var_preScaleY, var_postScaleX, var_postScaleY, var_angle, var_angleSnap, var_speedCap);
 	SetConsoleTextAttribute(hConsole, 0x08);
 
 
@@ -188,6 +197,11 @@ int main()
 
 	QueryPerformanceCounter(&oldFrameTime);
 	QueryPerformanceFrequency(&PCfreq);
+	
+	//Pre-loop calculations
+	a = var_senscap - var_sens;
+	b = var_accel / abs(a);
+	power = var_power - 1 < 0 ? 0 : var_power - 1;
 
 	while (interception_receive(context, device = interception_wait(context), &stroke, 1) > 0)
 	{
@@ -301,12 +315,17 @@ int main()
 					rate = sqrt(dx*dx + dy*dy) / frameTime_ms;	// calculate velocity of mouse based on deltas
 					rate -= var_offset;							// offset affects the rate that accel sees
 					if (rate > 0) {
-						rate *= var_accel;
-						power = var_power - 1;
-						if (power < 0) {
-							power = 0;							// clamp power at lower bound of 0
+						switch (var_accelMode) {
+						case 0:									//Original InterAccel acceleration
+							accelSens += pow((rate*var_accel), power);
+							break;
+						case 1:									//TauntyArmordillo's natural acceleration
+							accelSens += a - (a * exp((-rate*b)));
+							break;
+						case 2:									//Natural Log acceleration
+							accelSens += log((rate*var_accel) + 1);
+							break;
 						}
-						accelSens += exp(power * log(rate));		// acceptable substitute for the missing pow() function
 					}
 
 					if (debugOutput) {
