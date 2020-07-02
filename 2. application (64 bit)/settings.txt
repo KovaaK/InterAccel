@@ -1,4 +1,3 @@
-AccelMode = 0
 Sensitivity = 1
 Acceleration = 0
 SensitivityCap = 0
