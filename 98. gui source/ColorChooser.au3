@@ -1177,7 +1177,7 @@ EndFunc   ;==>_RGB2HSB
 
 Func __GDIPlus_BitmapCreateFromStream($hStream)
 
-	Local $aResult = DllCall($ghGDIPDll, 'uint', 'GdipCreateBitmapFromStream', 'ptr', $hStream, 'int*', 0)
+	Local $aResult = DllCall($__g_hGDIPDll, 'uint', 'GdipCreateBitmapFromStream', 'ptr', $hStream, 'int*', 0)
 
 	If @error Then
 		Return SetError(@error, @extended, 0)
@@ -1187,7 +1187,7 @@ EndFunc   ;==>__GDIPlus_BitmapCreateFromStream
 
 Func __GDIPlus_BitmapGetPixel($hBitmap, $iX, $iY)
 
-	Local $aResult = DllCall($ghGDIPDll, 'uint', 'GdipBitmapGetPixel', 'hwnd', $hBitmap, 'int', $iX, 'int', $iY, 'uint*', 0)
+	Local $aResult = DllCall($__g_hGDIPDll, 'uint', 'GdipBitmapGetPixel', 'hwnd', $hBitmap, 'int', $iX, 'int', $iY, 'uint*', 0)
 
 	If @error Then
 		Return SetError(@error, @extended, 0)
@@ -1197,7 +1197,7 @@ EndFunc   ;==>__GDIPlus_BitmapGetPixel
 
 Func __GDIPlus_ImageRotateFlip($hImage, $iRotateFlip)
 
-	Local $aResult = DllCall($ghGDIPDll, 'uint', 'GdipImageRotateFlip', 'hwnd', $hImage, 'int', $iRotateFlip)
+	Local $aResult = DllCall($__g_hGDIPDll, 'uint', 'GdipImageRotateFlip', 'hwnd', $hImage, 'int', $iRotateFlip)
 
 	If @error Then
 		Return SetError(@error, @extended, False)
@@ -1215,7 +1215,7 @@ Func __GDIPlus_LineBrushCreate($nX1, $nY1, $nX2, $nY2, $iARGB1, $iARGB2, $iWrap 
 	DllStructSetData($tPoint2, 1, $nX2)
 	DllStructSetData($tPoint2, 2, $nY2)
 
-	Local $aResult = DllCall($ghGDIPDll, 'uint', 'GdipCreateLineBrush', 'ptr', DllStructGetPtr($tPoint1), 'ptr', DllStructGetPtr($tPoint2), 'uint', $iARGB1, 'uint', $iARGB2, 'int', $iWrap, 'int*', 0)
+	Local $aResult = DllCall($__g_hGDIPDll, 'uint', 'GdipCreateLineBrush', 'ptr', DllStructGetPtr($tPoint1), 'ptr', DllStructGetPtr($tPoint2), 'uint', $iARGB1, 'uint', $iARGB2, 'int', $iWrap, 'int*', 0)
 
 	If @error Then
 		Return SetError(@error, @extended, 0)
@@ -1225,7 +1225,7 @@ EndFunc   ;==>__GDIPlus_LineBrushCreate
 
 Func __GDIPlus_LineBrushSetTransform($hBrush, $hMatrix)
 
-	Local $aResult = DllCall($ghGDIPDll, 'uint', 'GdipSetLineTransform', 'hwnd', $hBrush, 'hwnd', $hMatrix)
+	Local $aResult = DllCall($__g_hGDIPDll, 'uint', 'GdipSetLineTransform', 'hwnd', $hBrush, 'hwnd', $hMatrix)
 
 	If @error Then
 		Return SetError(@error, @extended, False)
