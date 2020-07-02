@@ -27,6 +27,10 @@ TODO:
 - Simple GUI mode that hides Sensitivity/Pre-scales.
 
 Changelog:
+4.00 (07/02/20)
+-Added mode switching to the GUI to support new forms of accel
+-Added support for Diabotical's Natural accel and natural logarithmic accel
+
 3.02 (01/03/16)
 - Fixed crash on startup bug that occured while Windows was too busy (such as during OS startup on a non SSD)
 - Added support for 2000hz mice for graphing purposes
