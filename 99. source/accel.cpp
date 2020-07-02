@@ -83,7 +83,7 @@ int main()
 	SetConsoleWindowInfo(hConsole, TRUE, &conSize);
 
 	SetConsoleTextAttribute(hConsole, 0x0f);
-	printf("Sidiouth's InterAccel test version\npovohat's quake live accel emulator v0.000002\n=============================================\n\n");	//This text needs to change
+	printf("povohat's interception mouse accel\nAdditional contributions by Sidiouth & _m00se_\n==============================================\n\n");
 	SetConsoleTextAttribute(hConsole, 0x08);
 
 
@@ -324,9 +324,6 @@ int main()
 							break;
 						case 2:									//Natural Log acceleration
 							accelSens += log((rate*var_accel) + 1);
-							break;
-						case 3:									//CS:GO/Source style accel
-							accelSens *= pow(++rate, power);
 							break;
 						}
 					}
