@@ -379,7 +379,7 @@ Func _WriteValsToConfig($silentsuccess = 0) ; Write new values to 'current' valu
    EndIf
 
    ;Disable power during natural accel
-   If GUICtrlRead($m_new_accelmode) == "Natural" Then
+   If GUICtrlRead($m_new_accelmode) == $mode2 OR GUICtrlRead($m_new_accelmode) == $mode3 Then
 	   GUICtrlSetState($m_new_power, $GUI_DISABLE)
    Else
 	   GUICtrlSetState($m_new_power, $GUI_ENABLE)
@@ -496,7 +496,7 @@ Func _ReadValsFromConfig() ; Get existing values from the Config
    FileClose($hFileOpen)
 
    ;Disable power during natural accel
-   If GUICtrlRead($m_new_accelmode) == "Natural" Then
+   If GUICtrlRead($m_new_accelmode) == $mode2 OR GUICtrlRead($m_new_accelmode) == $mode3 Then
 	   GUICtrlSetState($m_new_power, $GUI_DISABLE)
    Else
 	   GUICtrlSetState($m_new_power, $GUI_ENABLE)
