@@ -83,7 +83,7 @@ int main()
 	SetConsoleWindowInfo(hConsole, TRUE, &conSize);
 
 	SetConsoleTextAttribute(hConsole, 0x0f);
-	printf("Sidiouth's InterAccel test version\npovohat's quake live accel emulator v0.000002\n=============================================\n\n");
+	printf("Sidiouth's InterAccel test version\npovohat's quake live accel emulator v0.000002\n=============================================\n\n");	//This text needs to change
 	SetConsoleTextAttribute(hConsole, 0x08);
 
 
