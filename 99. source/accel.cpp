@@ -32,6 +32,8 @@ int main()
 		b,					//var_accel/abs(a)
 		carryX = 0,
 		carryY = 0,
+		reducedX = 0,
+		reducedY = 0,
 		var_sens = 1,
 		var_accel = 0,
 		var_senscap = 0,
@@ -365,9 +367,13 @@ int main()
 				dx += carryX;
 				dy += carryY;
 
+				// reduce movement to whole number
+				reducedX = round(dx);
+				reducedY = round(dy);
+
 				// remainder gets passed into next cycle
-				carryX = dx - floor(dx);
-				carryY = dy - floor(dy);
+				carryX = dx - reducedX;
+				carryY = dy - reducedY;
 
 				if (debugOutput) {
 					coord.X = 0;
@@ -375,7 +381,7 @@ int main()
 					SetConsoleCursorPosition(hConsole, coord);
 					SetConsoleTextAttribute(hConsole, 0x08);
 					printf("input    - X: %05d   Y: %05d\n", mstroke.x, mstroke.y);
-					printf("output   - X: %05d   Y: %05d    accel sens: %.3f      \n", (int)floor(dx), (int)floor(dy), accelSens);
+					printf("output   - X: %05d   Y: %05d    accel sens: %.3f      \n", (int)reducedX, (int)reducedY, accelSens);
 					printf("subpixel - X: %.3f   Y: %.3f    frame time: %.3f      ", carryX, carryY, frameTime_ms);
 					SetConsoleTextAttribute(hConsole, 0x08);
 
@@ -399,8 +405,8 @@ int main()
 				}
 
 				// output new counts
-				mstroke.x = (int)floor(dx);
-				mstroke.y = (int)floor(dy);
+				mstroke.x = (int)reducedX;
+				mstroke.y = (int)reducedY;
 
 				oldFrameTime = frameTime;
 			}
