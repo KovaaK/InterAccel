@@ -148,9 +148,9 @@ Thanks to "The Man" and nGolf for the help!
 Global $GraphStamp = 0 ; used to make sure we aren't drawing an old request
 ; These are GUI elements - don't touch these.
 Global $GUI, $Graph, $ProfileGUI, $ProfileLabel, $hyperlink, $Dummy
-Global $mode1 = "QuakeLive" ;AccelMode names
-Global $mode2 = "Natural"
-Global $mode3 = "Logarithmic"
+Global $mode0 = "QuakeLive" ;AccelMode names
+Global $mode1 = "Natural"
+Global $mode2 = "Logarithmic"
 Global $m_accelmode, $m_sens, $m_accel, $m_senscap, $m_offset, $m_power, $m_prexscale, $m_preyscale, $m_postxscale, $m_postyscale, $m_angle, $m_driverenabled, $m_anglesnap, $m_speedcap
 Global $m_new_accelmode, $m_new_sens, $m_new_accel, $m_new_senscap, $m_new_offset, $m_new_power, $m_new_prexscale, $m_new_preyscale, $m_new_postxscale, $m_new_postyscale, $m_new_angle, $m_new_driverenabled, $m_new_anglesnap, $m_new_speedcap
 Global $m_driverenabled, $autoprofilecheckbox, $openprofilebutton, $manualprofilecheckbox
@@ -202,18 +202,18 @@ EndFunc
 
 Func _ConvertAccelMode($input)	;return accelmode as a number for settings.txt
 	Switch $input
-		Case $mode1
+		Case $mode0
 			Return 0
-		Case $mode2
+		Case $mode1
 			Return 1
-		Case $mode3
+		Case $mode2
 			Return 2
 		Case 0
-			Return $mode1
+			Return $mode0
 		Case 1
-			Return $mode2
+			Return $mode1
 		Case 2
-			Return $mode3
+			Return $mode2
 
 	EndSwitch
 EndFunc
@@ -298,7 +298,7 @@ EndFunc
 
 Func _WriteValsToConfig($silentsuccess = 0) ; Write new values to 'current' values and settings.txt.
    ; If bad values exist, fail before doing anything.
-   If Not(GUICtrlRead($m_new_accelmode) == $mode1 Or GUICtrlRead($m_new_accelmode) == $mode2 Or GUICtrlRead($m_new_accelmode) == $mode3) Then
+   If Not(GUICtrlRead($m_new_accelmode) == $mode0 Or GUICtrlRead($m_new_accelmode) == $mode1 Or GUICtrlRead($m_new_accelmode) == $mode2) Then
 	   MsgBox(0x10, "Failure", "AccelMode must be one of the listed modes", 3, $GUI)
 	  Return 1
    EndIf
@@ -379,7 +379,7 @@ Func _WriteValsToConfig($silentsuccess = 0) ; Write new values to 'current' valu
    EndIf
 
    ;Disable power during natural accel
-   If GUICtrlRead($m_new_accelmode) == $mode2 OR GUICtrlRead($m_new_accelmode) == $mode3 Then
+   If GUICtrlRead($m_new_accelmode) == $mode1 OR GUICtrlRead($m_new_accelmode) == $mode2 Then
 	   GUICtrlSetState($m_new_power, $GUI_DISABLE)
    Else
 	   GUICtrlSetState($m_new_power, $GUI_ENABLE)
@@ -496,7 +496,7 @@ Func _ReadValsFromConfig() ; Get existing values from the Config
    FileClose($hFileOpen)
 
    ;Disable power during natural accel
-   If GUICtrlRead($m_new_accelmode) == $mode2 OR GUICtrlRead($m_new_accelmode) == $mode3 Then
+   If GUICtrlRead($m_new_accelmode) == $mode1 OR GUICtrlRead($m_new_accelmode) == $mode2 Then
 	   GUICtrlSetState($m_new_power, $GUI_DISABLE)
    Else
 	   GUICtrlSetState($m_new_power, $GUI_ENABLE)
@@ -542,7 +542,7 @@ Func _ReadProfile($file, $silentsuccess = 0) ; read $file to current settings
 	  Return
    EndIf
 
-   GUICtrlSetData($m_new_accelmode, IniRead($file,"MouseSettings","AccelMode",$mode1))
+   GUICtrlSetData($m_new_accelmode, IniRead($file,"MouseSettings","AccelMode",$mode0))
    GUICtrlSetData($m_new_sens, IniRead($file,"MouseSettings","Sensitivity","1"))
    GUICtrlSetData($m_new_accel, IniRead($file,"MouseSettings","Acceleration","0"))
    GUICtrlSetData($m_new_senscap, IniRead($file,"MouseSettings","SensitivityCap","0"))
@@ -592,7 +592,7 @@ Func _Draw_Graph() ; Refreshes graph, starts with current values (green line) th
 	  $file = $file_path & $ProfilesChecked[$i]
 	  if NOT(FileExists($file)) then ContinueLoop ; don't load deleted profiles
 
-	  $accelmode = IniRead($file, "MouseSettings","AccelMode",$mode1)
+	  $accelmode = IniRead($file, "MouseSettings","AccelMode",$mode0)
 	  $sens = IniRead($file,"MouseSettings","Sensitivity","1")
 	  $accel = IniRead($file,"MouseSettings","Acceleration","0")
 	  $senscap = IniRead($file,"MouseSettings","SensitivityCap","0")
@@ -699,17 +699,17 @@ Func _MouseInputToOutput($input, $accelmode, $sens, $accel, $senscap, $offset, $
 	  $rate -= $offset
 	  if $rate > 0 Then
 		  Switch $accelmode
-			  Case $mode1
+			  Case $mode0
 				  $rate *= $accel
 				  $power -= 1
 				  if $power < 0 Then	$power = 0
 				  $accelsens += Exp($power * Log($rate))
-			  Case $mode2
+			  Case $mode1
 				  $rate *= $accel
 				  $rate /= Abs($a)
 				  $rate *= -1
 				  $accelsens += $a - ($a * exp($rate))
-			  Case $mode3
+			  Case $mode2
 				  $rate *= $accel
 				  $rate += 1
 				  $accelsens += Log($rate)
@@ -1053,9 +1053,9 @@ Func _Main() ; Draw and handle the GUI
    GUICtrlCreateLabel("Current", 0, -1) ; next Cell
    GUISetFont (9, 400)
    GUICtrlCreateLabel("AccelMode", -3 * $widthCell, $heightCell) ; next line
-   $m_new_accelmode = GUICtrlCreateCombo($mode1, 0, -1) ; same line, next cell
+   $m_new_accelmode = GUICtrlCreateCombo($mode0, 0, -1) ; same line, next cell
+   GUICtrlSetData($m_new_accelmode, $mode1)
    GUICtrlSetData($m_new_accelmode, $mode2)
-   GUICtrlSetData($m_new_accelmode, $mode3)
    $m_accelmode = GUICtrlCreateLabel($mode1, 0, -1) ; same line, next cell
    GUICtrlCreateLabel("Sensitivity", -3 * $widthCell, $heightCell) ; next line
    $m_new_sens = GUICtrlCreateInput("1", 0, -1) ; same line, next cell
