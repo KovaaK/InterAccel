@@ -27,6 +27,7 @@ This method will run interaccel.exe hidden in the background while "driver enabl
 and restart it any time you save changes.  Note that closing the GUI also closes 
 interaccel.exe.  Minimizing it to tray is fine though, and you can start it up with the 
 command line parameter "interGUI.exe -m" to start it minimized (good for Windows startup).
+Use command line parameter "interGUI.exe -g" to start with global hotkeys.
 
 Option B):
 CAREFULLY edit the settings.txt file. I have done almost no checking of input at this early stage
