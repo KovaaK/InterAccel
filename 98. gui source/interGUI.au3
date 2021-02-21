@@ -27,6 +27,9 @@ TODO:
 - Simple GUI mode that hides Sensitivity/Pre-scales.
 
 Changelog:
+4.01 (02/21/21)
+- Added command-line option to enable global hotkeys on startup (interGUI.exe -g)
+
 4.00 (07/02/20)
 -Added mode switching to the GUI to support new forms of accel
 -Added support for Diabotical's Natural accel and natural logarithmic accel
@@ -1227,10 +1230,16 @@ Func _Main() ; Draw and handle the GUI
 	  EndIf
    EndIf
 
-   if $CmdLine[0] > 0 and $CmdLine[1] == "-m" Then ; If you start the program with -m, minimize it.
-	  GuiSetState(@SW_HIDE)
-	  TraySetState(1) ; show
-	  TraySetToolTip ("Intercept Mouse Accel Filter Config")
+   if $CmdLine[0] > 0 Then
+		For $i = 1 To $CmdLine[0] Step +1
+			If $CmdLine[$i] == "-m" Then ; If you start the program with -m, minimize it.
+				GuiSetState(@SW_HIDE)
+				TraySetState(1) ; show
+				TraySetToolTip ("Intercept Mouse Accel Filter Config")
+			ElseIf $CmdLine[$i] == "-g" Then ; If you start the program with -g, enable global hotkeys.
+				_GlobalHKToggleToggle()
+			EndIf
+		Next
    EndIf
 
    ; Main GUI Loop
